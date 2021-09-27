@@ -3,9 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+
+
 #include "GameFramework/Actor.h"
 #include "Maze.generated.h"
 
+
+class APacDot;
+class ATeleport;
 UCLASS()
 class PACMAN_API AMaze : public AActor
 {
@@ -22,6 +28,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void SpawnStaticMeshActor(const FVector& InLocation) const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	int XSize=1000;
@@ -36,9 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	UStaticMesh* Wall;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
-	UStaticMesh* PacDot;
+	TSubclassOf<APacDot> PacDot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
-	UStaticMesh* Teleport;
+	TSubclassOf<ATeleport>  Teleport;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	APawn* Ghost;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
