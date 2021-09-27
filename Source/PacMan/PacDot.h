@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 
-#include "Collectable.h"
 #include "GameFramework/Actor.h"
 #include "PacDot.generated.h"
 
@@ -35,7 +34,7 @@ public:
 	UStaticMeshComponent* DotMesh;
 
 	UFUNCTION()
-    void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);
+    virtual void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);
 	
 
 };
