@@ -3,17 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacDot.h"
-#include "Test.generated.h"
+#include "Collectable.h"
+#include "Item.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PACMAN_API ATest : public APacDot
+class PACMAN_API AItem : public ACollectable
 {
 	GENERATED_BODY()
 
+
 public:
+	AItem();
+	virtual void Tick(float DeltaTime) override;
 	virtual void OnOverlap(AActor* OverlappedActor, AActor* OtherActor) override;
+	
 };

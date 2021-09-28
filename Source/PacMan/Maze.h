@@ -10,7 +10,7 @@
 #include "Maze.generated.h"
 
 
-class APacDot;
+class ACollectable;
 class ATeleport;
 UCLASS()
 class PACMAN_API AMaze : public AActor
@@ -43,7 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	UStaticMesh* Wall;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
-	TSubclassOf<APacDot> PacDot;
+	TSubclassOf<ACollectable> PacDot;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
+	TSubclassOf<ACollectable> Item;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	TSubclassOf<ATeleport>  Teleport;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")

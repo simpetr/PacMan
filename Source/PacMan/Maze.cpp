@@ -4,7 +4,7 @@
 #include "Maze.h"
 
 #include "DrawDebugHelpers.h"
-#include "PacDot.h"
+#include "Collectable.h"
 #include "Engine/EngineTypes.h"
 #include "Engine/StaticMeshActor.h"
 #include "Teleport.h"
@@ -50,8 +50,16 @@ void AMaze::BeginPlay()
 				
 				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf,20)+MyLocation;
 				FActorSpawnParameters SpawnParameters;
-				GetWorld()->SpawnActor<APacDot>(PacDot,Location,FRotator::ZeroRotator,SpawnParameters);
+				GetWorld()->SpawnActor<ACollectable>(PacDot,Location,FRotator::ZeroRotator,SpawnParameters);
 			}
+			if(Index=='2' && PacDot)
+			{
+				
+				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf,20)+MyLocation;
+				FActorSpawnParameters SpawnParameters;
+				GetWorld()->SpawnActor<ACollectable>(Item,Location,FRotator::ZeroRotator,SpawnParameters);
+			}
+		
 			if(Index=='3' && Teleport)
 			{
 				//Left Teleporter
