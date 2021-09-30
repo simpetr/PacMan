@@ -4,9 +4,15 @@
 #include "GhostCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Collectable.h"
+#include "PacDot.h"
 
+#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
+#define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
+#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}
 
 // Sets default values
 AGhostCharacter::AGhostCharacter()
@@ -24,6 +30,8 @@ AGhostCharacter::AGhostCharacter()
 
 	BaseTurnRate = 45.f;
 	BaseLookUpAtRate = 45.f;
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this,&AGhostCharacter::OnOverlapBegin);
 
 }
 
@@ -92,5 +100,25 @@ void AGhostCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAxis("TurnRate", this, &AGhostCharacter::TurnAtRate);
 	/*PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AGhostCharacter::LookUpAtRate);*/
+}
+
+void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+
+	if(!OtherActor) return;
+	if(!OtherActor->IsA(ACollectable::StaticClass())) return;
+
+	if(OtherActor->IsA(APacDot::StaticClass()))
+		{
+			CollectedDot++;
+			AvailableDot++;
+			OnCollected.Broadcast(0, CollectedDot);
+		}else
+		{
+			CollectedItem++;
+			OnCollected.Broadcast(1,CollectedItem);
+		}
+		
 }
 

@@ -5,20 +5,25 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Runtime/UMG/Public/UMG.h"
-#include "PacDotWidget.generated.h"
+#include "ItemWidget.generated.h"
 
-
+/**
+ * 
+ */
 UCLASS()
-class PACMAN_API UPacDotWidget : public UUserWidget
+class PACMAN_API UItemWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
-	UPacDotWidget(const FObjectInitializer& ObjectInitializer);
+	
+	UItemWidget(const FObjectInitializer& ObjectInitializer);
 
 	virtual  void NativeConstruct() override;
 
 	void UpdateCount(int Value) const;
+
+	void ResetText();
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
 	class UTextBlock* TextCounter;

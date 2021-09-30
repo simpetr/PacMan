@@ -11,9 +11,10 @@ UPacDotWidget::UPacDotWidget(const FObjectInitializer& ObjectInitializer):Super(
 void UPacDotWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	UpdateCount(0);
 }
 
-void UPacDotWidget::UpdateCount(int Value)
+void UPacDotWidget::UpdateCount(int Value) const
 {
 	if(TextCounter)
 	{
@@ -22,14 +23,6 @@ void UPacDotWidget::UpdateCount(int Value)
 			TextCounter->SetVisibility(ESlateVisibility::Visible);
 		}
 
-		TextCounter->SetText(FText::FromString("Dots Counter: "+FString::FromInt(Value)));
-	}
-}
-
-void UPacDotWidget::ResetText()
-{
-	if(TextCounter)
-	{
-		TextCounter->SetVisibility(ESlateVisibility::Hidden);
+		TextCounter->SetText(FText::FromString("Dots: "+FString::FromInt(Value)));
 	}
 }
