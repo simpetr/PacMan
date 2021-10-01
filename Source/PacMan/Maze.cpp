@@ -5,6 +5,7 @@
 
 #include "DrawDebugHelpers.h"
 #include "Collectable.h"
+#include "GhostCharacter.h"
 #include "Engine/EngineTypes.h"
 #include "Engine/StaticMeshActor.h"
 #include "Teleport.h"
@@ -20,11 +21,10 @@ AMaze::AMaze()
 }
 
 // Called when the game starts or when spawned
+// Create the Maze based on the string SEED
 void AMaze::BeginPlay()
 {
 	Super::BeginPlay();
-	/*DrawDebugSphere(GetWorld(), StartLocation, 10.f, 32, FColor::Red, false, 5.f);
-	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, 4.9f, 0, 1.f);*/
 	UWorld* World = GetWorld();	
 	
 	const FVector MyLocation = GetActorLocation();
@@ -33,7 +33,9 @@ void AMaze::BeginPlay()
 	{
 		for(int j=0;j<YSize;j+=Offset)
 		{
+			//ONLY DEBUG
 			//DrawDebugSphere(World,FVector(i,j,0)+MyLocation,5.f, 16, FColor::Red, true) ;
+			//TODO code better the index creation
 			int IndexI= i/100;
 			int IndexJ= j/100;
 			//PRINT_COMPLEX("%d",IndexI);
@@ -43,6 +45,7 @@ void AMaze::BeginPlay()
 			{
 				FVector Location = FVector(i,j,0)+MyLocation;
 				SpawnStaticMeshActor(Location);
+				continue;
 			}
 			int OffsetHalf = Offset/2;
 			if(Index=='0' && PacDot)
@@ -51,6 +54,7 @@ void AMaze::BeginPlay()
 				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf,20)+MyLocation;
 				FActorSpawnParameters SpawnParameters;
 				GetWorld()->SpawnActor<ACollectable>(PacDot,Location,FRotator::ZeroRotator,SpawnParameters);
+				continue;
 			}
 			if(Index=='2' && PacDot)
 			{
@@ -58,6 +62,7 @@ void AMaze::BeginPlay()
 				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf,20)+MyLocation;
 				FActorSpawnParameters SpawnParameters;
 				GetWorld()->SpawnActor<ACollectable>(Item,Location,FRotator::ZeroRotator,SpawnParameters);
+				continue;
 			}
 		
 			if(Index=='3' && Teleport)
@@ -67,6 +72,7 @@ void AMaze::BeginPlay()
 				FActorSpawnParameters SpawnParameters;
 				ATeleport* Teleporter = GetWorld()->SpawnActor<ATeleport>(Teleport,Location,FRotator::ZeroRotator,SpawnParameters);
 				Teleporter->SetTeleportDirection(FVector::RightVector*YSize);
+				continue;
 			}
 			if(Index=='4' && Teleport)
 			{
@@ -75,9 +81,25 @@ void AMaze::BeginPlay()
 				FActorSpawnParameters SpawnParameters;
 				ATeleport* Teleporter = GetWorld()->SpawnActor<ATeleport>(Teleport,Location,FRotator::ZeroRotator,SpawnParameters);
 				Teleporter->SetTeleportDirection(FVector::LeftVector*XSize);
+				continue;
+			}
+			if(Index=='5' && Ghost)
+			{
+				//GhostPlayer
+				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf+Offset,35)+MyLocation;
+				FActorSpawnParameters SpawnParameters;
+				AGhostCharacter* GhostPlayer = GetWorld()->SpawnActor<AGhostCharacter>(Ghost,Location,FRotator::ZeroRotator,SpawnParameters);
 			}
 			
 		}
+	}
+
+	//Reset PlayerMode to GameOnly
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if(PC)
+	{
+		FInputModeGameOnly InputModeData;
+		PC->SetInputMode(InputModeData);
 	}
 }
 
@@ -88,6 +110,7 @@ void AMaze::Tick(float DeltaTime)
 
 }
 
+//Spawn Wall
 void AMaze::SpawnStaticMeshActor(const FVector &InLocation) const
 {
 	AStaticMeshActor* MyNewActor = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass());

@@ -23,9 +23,10 @@ public:
 
 	void UpdateCount(int Value) const;
 
-	void ResetText();
-
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
 	class UTextBlock* TextCounter;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
+    class UTextBlock* TextEscape;
 	
 };

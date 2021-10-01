@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Collectable.h"
 #include "PacDot.h"
 
@@ -19,7 +20,7 @@ AGhostCharacter::AGhostCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	AutoPossessPlayer = EAutoReceiveInput::Player0;
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->TargetArmLength = 200;
@@ -27,6 +28,9 @@ AGhostCharacter::AGhostCharacter()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	GhostMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
 	GhostMesh->SetupAttachment(RootComponent);
+	/*GhostVisionArea = CreateDefaultSubobject<UPointLightComponent>("GhostVision");
+	GhostVisionArea->SetupAttachment(GhostMesh);*/
+	
 
 	BaseTurnRate = 45.f;
 	BaseLookUpAtRate = 45.f;
@@ -39,6 +43,11 @@ AGhostCharacter::AGhostCharacter()
 void AGhostCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/*GhostVisionArea->SetIntensityUnits(ELightUnits::Candelas);
+	GhostVisionArea->SetIntensity(3.f);
+	GhostVisionArea->SetAttenuationRadius(200.f);
+	GhostVisionArea->SetCastShadows(false);*/
 	
 }
 
@@ -119,6 +128,9 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			CollectedItem++;
 			OnCollected.Broadcast(1,CollectedItem);
 		}
-		
+
+	//OnEat.Broadcast(0);
+
+	
 }
 

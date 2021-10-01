@@ -6,6 +6,7 @@
 #include "PacDotWidget.h"
 #include "ItemWidget.h"
 #include "GhostCharacter.h"
+#include "LifeWidget.h"
 #include "SkillsWidget.h"
 #include "Blueprint/UserWidget.h"
 
@@ -27,11 +28,13 @@ void APacManHUD::BeginPlay()
 		PacDot = CreateWidget<UPacDotWidget>(GetWorld(),DotWidget);
 		Item = CreateWidget<UItemWidget>(GetWorld(),ItemWidget);
 		Skills = CreateWidget<USkillsWidget>(GetWorld(),SkillsWidget);
-		if(PacDot&&Item&&Skills)
+		GameOver = CreateWidget<ULifeWidget>(GetWorld(),LifeWidget);
+		if(PacDot&&Item&&Skills&&GameOver)
 		{
 			PacDot->AddToViewport();
 			Item->AddToViewport();
 			Skills->AddToViewport();
+			GameOver->AddToViewport();
 		}
 	}
 
@@ -39,6 +42,7 @@ void APacManHUD::BeginPlay()
 	if(Player)
 	{
 		Player->OnCollected.AddDynamic(this,&APacManHUD::UpdateUI);
+		Player->OnEat.AddDynamic(this,&APacManHUD::CheckGameOver);
 	}
 }
 
@@ -61,7 +65,24 @@ void APacManHUD::UpdateUI(int TypeCollected, int Value)
 			break;
 		default:
 			break;
-	}
+	}	
+}
 
-	
+void APacManHUD::CheckGameOver(int Value)
+{
+	if(GameOver->CheckGameOver(Value))
+	{
+		APlayerController* PC = GetWorld()->GetFirstPlayerController();
+		if(PC)
+		{
+			FInputModeUIOnly InputModeData;
+			InputModeData.SetWidgetToFocus(GameOver->ButtonRestart->TakeWidget());
+			//InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			PC->SetInputMode(InputModeData);
+			PC->bShowMouseCursor = true;
+			PC->bEnableClickEvents = true;
+			PC->bEnableMouseOverEvents = true;
+		}
+	}
+	//TOOD Something extra?
 }

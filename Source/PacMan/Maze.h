@@ -3,15 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-
-
 #include "GameFramework/Actor.h"
 #include "Maze.generated.h"
 
 
 class ACollectable;
 class ATeleport;
+class AGhostCharacter;
 UCLASS()
 class PACMAN_API AMaze : public AActor
 {
@@ -49,7 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	TSubclassOf<ATeleport>  Teleport;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
-	APawn* Ghost;
+	TSubclassOf<APawn> Ghost;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	AActor* PacGhost;
 };

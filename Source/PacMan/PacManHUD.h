@@ -12,6 +12,7 @@
 class UPacDotWidget;
 class UItemWidget;
 class USkillsWidget;
+class ULifeWidget;
 UCLASS()
 class PACMAN_API APacManHUD : public AHUD
 {
@@ -32,9 +33,13 @@ public:
 	TSubclassOf<UUserWidget> DotWidget;
 	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
 	TSubclassOf<UUserWidget> SkillsWidget;
+	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
+	TSubclassOf<UUserWidget> LifeWidget;
 	
 	UFUNCTION()
 	void UpdateUI(int TypeCollected, int Value);
+	UFUNCTION()
+	void CheckGameOver(int Value);
 
 
 private:
@@ -44,4 +49,6 @@ private:
 	UItemWidget* Item;
 	UPROPERTY()
 	USkillsWidget* Skills;
+	UPROPERTY()
+	ULifeWidget* GameOver;
 };

@@ -9,8 +9,10 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UStaticMeshComponent;
+class UPointLightComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCollectedElement, int, TypeCollected, int , Value);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerEaten, int, Life);
 UCLASS()
 class PACMAN_API AGhostCharacter : public ACharacter
 {
@@ -29,8 +31,14 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Player")
 	UStaticMeshComponent*  GhostMesh;
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Player")
+	UPointLightComponent*  GhostVisionArea;
+
 	UPROPERTY(BlueprintAssignable)
 	FCollectedElement OnCollected;
+	
+	UPROPERTY(BlueprintAssignable)
+	FPlayerEaten OnEat;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -61,4 +69,5 @@ private:
 	int CollectedDot = 0;
 	int AvailableDot = 0;
 	int CollectedItem = 0;
+	int GhostLife = 3;
 };
