@@ -10,8 +10,8 @@ USkillsWidget::USkillsWidget(const FObjectInitializer& ObjectInitializer):Super(
 void USkillsWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-	TextPacDotNeedA->SetText(FText::FromString(FString::FromInt(PacDotSkillA)));
-	TextPacDotNeedB->SetText(FText::FromString(FString::FromInt(PacDotSkillB)));
+	TextPacDotNeedA->SetText(FText::FromString("Dots: "+ FString::FromInt(PacDotSkillA)));
+	TextPacDotNeedB->SetText(FText::FromString("Dots: "+FString::FromInt(PacDotSkillB)));
 	EnableSkills(0);
 }
 

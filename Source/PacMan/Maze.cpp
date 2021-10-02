@@ -117,6 +117,7 @@ void AMaze::SpawnStaticMeshActor(const FVector &InLocation) const
 	MyNewActor->SetMobility(EComponentMobility::Movable);
 	MyNewActor->SetActorLocation(InLocation);
 	MyNewActor->GetStaticMeshComponent()->SetStaticMesh(Wall);
+	MyNewActor->GetStaticMeshComponent()->SetGenerateOverlapEvents(true);
 	MyNewActor->SetMobility(EComponentMobility::Static);
 	
 	//UStaticMeshComponent* MeshComponent = MyNewActor->GetStaticMeshComponent();

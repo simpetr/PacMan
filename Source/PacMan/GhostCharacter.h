@@ -10,6 +10,8 @@ class USpringArmComponent;
 class UCameraComponent;
 class UStaticMeshComponent;
 class UPointLightComponent;
+class AGlowingDot;
+class UStaticMesh;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCollectedElement, int, TypeCollected, int , Value);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerEaten, int, Life);
@@ -34,6 +36,12 @@ public:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Player")
 	UPointLightComponent*  GhostVisionArea;
 
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category = "Player")
+	TSubclassOf<AGlowingDot> GlowingDot;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Player")
+	UStaticMesh* NormalGhost;
+
 	UPROPERTY(BlueprintAssignable)
 	FCollectedElement OnCollected;
 	
@@ -47,6 +55,9 @@ protected:
 	void MoveRight(float Value);
 	void TurnAtRate(float Value);
 	void LookUpAtRate(float Value);
+
+	void Fire();
+	void LightUp();
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Player")
 	float BaseTurnRate;
@@ -70,4 +81,23 @@ private:
 	int AvailableDot = 0;
 	int CollectedItem = 0;
 	int GhostLife = 3;
+	int SkillA = 5;
+	int SkillB = 10;
+	bool IsPressed = false;
+	bool SkillEnd = false;
+
+	float LerpDuration = 1.5f;
+	float ElapsedTme =0.f;
+	int ColorStart;
+	int ColorEnd;
+	int IntensityStart;
+	int IntensityEnd;
+
+	UPROPERTY()
+	UStaticMesh* ScaredGhostMesh;
+
+	FTimerHandle TimerHandle;
+	float TimeEnd= 2.f;
+
+	void StopSkill();
 };

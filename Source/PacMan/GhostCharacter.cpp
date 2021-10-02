@@ -2,14 +2,16 @@
 
 
 #include "GhostCharacter.h"
-
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
+#include "DrawDebugHelpers.h"
 #include "Collectable.h"
 #include "PacDot.h"
+#include "GlowingDot.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
 #define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
@@ -23,13 +25,13 @@ AGhostCharacter::AGhostCharacter()
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->TargetArmLength = 200;
+	SpringArmComponent->TargetArmLength = 420;
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	GhostMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
 	GhostMesh->SetupAttachment(RootComponent);
-	/*GhostVisionArea = CreateDefaultSubobject<UPointLightComponent>("GhostVision");
-	GhostVisionArea->SetupAttachment(GhostMesh);*/
+	GhostVisionArea = CreateDefaultSubobject<UPointLightComponent>("GhostVision");
+	GhostVisionArea->SetupAttachment(GhostMesh);
 	
 
 	BaseTurnRate = 45.f;
@@ -44,12 +46,27 @@ void AGhostCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/*GhostVisionArea->SetIntensityUnits(ELightUnits::Candelas);
+	/*Setting up light parameters*/
+	GhostVisionArea->SetIntensityUnits(ELightUnits::Candelas);
 	GhostVisionArea->SetIntensity(3.f);
-	GhostVisionArea->SetAttenuationRadius(200.f);
-	GhostVisionArea->SetCastShadows(false);*/
+	GhostVisionArea->SetAttenuationRadius(220.f);
+	GhostVisionArea->SetSourceRadius(200.f);
+	GhostVisionArea->SetSoftSourceRadius(200.f);
+	GhostVisionArea->SetCastShadows(false);
+	GhostVisionArea->bUseTemperature = true;
+	GhostVisionArea->SetTemperature(12000);
+	GhostVisionArea->SetMobility(EComponentMobility::Movable);
+
+	/*Retrieving ScaryGhostmesh*/
+	ScaredGhostMesh = GhostMesh->GetStaticMesh();
+
+	
 	
 }
+
+/*Movement functions derived by the character class*/
+#pragma region Movement
+
 
 void AGhostCharacter::MoveForward(float Value)
 {
@@ -90,11 +107,83 @@ void AGhostCharacter::LookUpAtRate(float Value)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Value * BaseLookUpAtRate * GetWorld()->GetDeltaSeconds());
 }
+#pragma endregion Movement
+
+void AGhostCharacter::Fire()
+{
+	if(AvailableDot>=SkillA)
+	{
+		PRINT("Fire");
+		AvailableDot-=SkillA;
+		OnCollected.Broadcast(0,AvailableDot);
+		//DO SOMETHING
+		/*FVector Loc;
+		FRotator Rot;
+		GetController()->GetPlayerViewPoint(Loc,Rot);*/
+		const FVector Loc = GetActorForwardVector();
+		const FVector LocStart = GetActorLocation();
+		//Debug Purposes
+		DrawDebugSphere(GetWorld(),LocStart,5,8,FColor::Red,false,3,0,1);
+		DrawDebugLine(GetWorld(),LocStart,LocStart+(Loc*100.f),FColor::Red,false,3,0,1);
+		if(GlowingDot)
+		{
+			FActorSpawnParameters SpawnParameters;
+			AGlowingDot* Sphere =  GetWorld()->SpawnActor<AGlowingDot>(GlowingDot,LocStart,GetActorRotation(),SpawnParameters);
+		}
+		
+		
+		
+	}
+}
+
+//TODO change with light immdiately and then lerp
+void AGhostCharacter::LightUp()
+{
+	if(AvailableDot>=SkillB)
+	{
+		
+		PRINT("Light Up");
+		AvailableDot-=SkillB;
+		OnCollected.Broadcast(0,AvailableDot);
+		
+		GhostMesh->SetStaticMesh(NormalGhost);
+		ElapsedTme = 0.f;
+		SkillEnd = false;
+		ColorStart = GhostVisionArea->Temperature;
+		ColorEnd = 3500;
+		IntensityStart = GhostVisionArea->Intensity;
+		IntensityEnd =10;
+		IsPressed = true;
+		//GetWorldTimerManager().SetTimer(TimerHandle,this,&AGhostCharacter::StopSkill,2.f,false,2.f);
+		/*Actors I want overlapping with the sphere*/
+		TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectType;
+		TraceObjectType.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
+		/*Ignore these actors*/
+		TArray<AActor*> IgnoreActors;
+		IgnoreActors.Add(this);
+		TArray<AActor*> InsideSphere;
+		//TODO change with ghostpacman
+		UClass* SeekClass = APacDot::StaticClass();
+		
+		
+		UKismetSystemLibrary::SphereOverlapActors(GetWorld(),GetActorLocation(),100.f,TraceObjectType,SeekClass,IgnoreActors,InsideSphere);
+		PRINT_COMPLEX("%d", InsideSphere.Num());
+	}
+}
 
 // Called every frame
 void AGhostCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if(IsPressed)
+	{
+		GhostVisionArea->SetIntensity(FMath::Lerp(IntensityStart,IntensityEnd,ElapsedTme/LerpDuration));
+		GhostVisionArea->SetTemperature(FMath::Lerp(ColorStart,ColorEnd,ElapsedTme/LerpDuration));
+		ElapsedTme+=DeltaTime;
+		if(ElapsedTme>=LerpDuration)
+			StopSkill();
+	}
+	
 
 }
 
@@ -107,6 +196,9 @@ void AGhostCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AGhostCharacter::TurnAtRate);
+
+	PlayerInputComponent->BindAction("Fire",IE_Pressed,this,&AGhostCharacter::Fire);
+	PlayerInputComponent->BindAction("LightUp",IE_Pressed,this,&AGhostCharacter::LightUp);
 	/*PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AGhostCharacter::LookUpAtRate);*/
 }
@@ -122,7 +214,7 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		{
 			CollectedDot++;
 			AvailableDot++;
-			OnCollected.Broadcast(0, CollectedDot);
+			OnCollected.Broadcast(0, AvailableDot);
 		}else
 		{
 			CollectedItem++;
@@ -131,6 +223,30 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 
 	//OnEat.Broadcast(0);
 
+	
+}
+
+void AGhostCharacter::StopSkill()
+{
+	PRINT("CALLED STOP");
+	//TODO invert condition for better reading
+	if(!SkillEnd)
+	{
+		ColorStart = GhostVisionArea->Temperature;
+		ColorEnd = 12000;
+		IntensityStart = GhostVisionArea->Intensity;
+		IntensityEnd = 3;
+		
+		
+		ElapsedTme = 0.f;
+		SkillEnd = true;
+	}
+	else
+	{
+		GhostMesh->SetStaticMesh(ScaredGhostMesh);
+		IsPressed = false;
+	}
+	
 	
 }
 
