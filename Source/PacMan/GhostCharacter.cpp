@@ -11,6 +11,7 @@
 #include "Collectable.h"
 #include "PacDot.h"
 #include "GlowingDot.h"
+#include "PacGhostEnemy.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 #define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
@@ -39,6 +40,11 @@ AGhostCharacter::AGhostCharacter()
 
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this,&AGhostCharacter::OnOverlapBegin);
 
+}
+
+bool AGhostCharacter::IsSkillActive() const
+{
+	return IsPressed;
 }
 
 // Called when the game starts or when spawned
@@ -157,17 +163,20 @@ void AGhostCharacter::LightUp()
 		//GetWorldTimerManager().SetTimer(TimerHandle,this,&AGhostCharacter::StopSkill,2.f,false,2.f);
 		/*Actors I want overlapping with the sphere*/
 		TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectType;
-		TraceObjectType.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
+		TraceObjectType.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
 		/*Ignore these actors*/
 		TArray<AActor*> IgnoreActors;
 		IgnoreActors.Add(this);
 		TArray<AActor*> InsideSphere;
-		//TODO change with ghostpacman
-		UClass* SeekClass = APacDot::StaticClass();
+		UClass* SeekClass = APacGhostEnemy::StaticClass();
 		
 		
-		UKismetSystemLibrary::SphereOverlapActors(GetWorld(),GetActorLocation(),100.f,TraceObjectType,SeekClass,IgnoreActors,InsideSphere);
+		UKismetSystemLibrary::SphereOverlapActors(GetWorld(),GetActorLocation(),150.f,TraceObjectType,SeekClass,IgnoreActors,InsideSphere);
 		PRINT_COMPLEX("%d", InsideSphere.Num());
+		for(auto& x : InsideSphere)
+		{
+			x->Destroy();
+		}
 	}
 }
 
@@ -208,9 +217,9 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 {
 
 	if(!OtherActor) return;
-	if(!OtherActor->IsA(ACollectable::StaticClass())) return;
-
-	if(OtherActor->IsA(APacDot::StaticClass()))
+	if(OtherActor->IsA(ACollectable::StaticClass()))
+	{
+		if(OtherActor->IsA(APacDot::StaticClass()))
 		{
 			CollectedDot++;
 			AvailableDot++;
@@ -220,8 +229,13 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			CollectedItem++;
 			OnCollected.Broadcast(1,CollectedItem);
 		}
-
-	//OnEat.Broadcast(0);
+		return;
+	}
+	if(OtherActor->IsA(APacGhostEnemy::StaticClass()))
+	{
+		
+		OnEat.Broadcast(0);
+	}
 
 	
 }

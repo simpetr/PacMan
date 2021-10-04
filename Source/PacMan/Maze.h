@@ -10,6 +10,7 @@
 class ACollectable;
 class ATeleport;
 class AGhostCharacter;
+class APacGhostEnemy;
 UCLASS()
 class PACMAN_API AMaze : public AActor
 {
@@ -40,6 +41,8 @@ public:
 	FString LevelSeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	UStaticMesh* Wall;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="MazeSetup")
+	UStaticMesh* SpecialArea;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	TSubclassOf<ACollectable> PacDot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
@@ -49,5 +52,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	TSubclassOf<APawn> Ghost;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
-	AActor* PacGhost;
+	TSubclassOf<APawn> PacGhost;
 };

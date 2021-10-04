@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "Collectable.h"
 #include "GhostCharacter.h"
+#include "PacGhostEnemy.h"
 #include "Engine/EngineTypes.h"
 #include "Engine/StaticMeshActor.h"
 #include "Teleport.h"
@@ -56,7 +57,7 @@ void AMaze::BeginPlay()
 				GetWorld()->SpawnActor<ACollectable>(PacDot,Location,FRotator::ZeroRotator,SpawnParameters);
 				continue;
 			}
-			if(Index=='2' && PacDot)
+			if(Index=='2' && Item)
 			{
 				
 				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf,20)+MyLocation;
@@ -89,6 +90,15 @@ void AMaze::BeginPlay()
 				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf+Offset,35)+MyLocation;
 				FActorSpawnParameters SpawnParameters;
 				AGhostCharacter* GhostPlayer = GetWorld()->SpawnActor<AGhostCharacter>(Ghost,Location,FRotator::ZeroRotator,SpawnParameters);
+				continue;
+			}
+			if(Index=='6' && PacGhost)
+			{
+				//PacGhostEnemy
+				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf+Offset,0)+MyLocation;
+				FActorSpawnParameters SpawnParameters;
+				APacGhostEnemy* PacGhostEnemy = GetWorld()->SpawnActor<APacGhostEnemy>(PacGhost,Location,FRotator::ZeroRotator,SpawnParameters);
+				
 			}
 			
 		}

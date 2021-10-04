@@ -2,6 +2,7 @@
 
 
 #include "PacDot.h"
+#include "GhostCharacter.h"
 
 #define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
 #define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
@@ -10,7 +11,12 @@
 
 void APacDot::OnOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	PRINT("PacDot");
-	Destroy();
+	if(!OtherActor) return;;
+	if(OtherActor->IsA(AGhostCharacter::StaticClass()))
+	{
+		PRINT("PacDot");
+		Destroy();
+	}
+	
 }
 
