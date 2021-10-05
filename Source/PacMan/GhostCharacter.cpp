@@ -65,9 +65,6 @@ void AGhostCharacter::BeginPlay()
 
 	/*Retrieving ScaryGhostmesh*/
 	ScaredGhostMesh = GhostMesh->GetStaticMesh();
-
-	
-	
 }
 
 /*Movement functions derived by the character class*/
@@ -136,9 +133,7 @@ void AGhostCharacter::Fire()
 			FActorSpawnParameters SpawnParameters;
 			AGlowingDot* Sphere =  GetWorld()->SpawnActor<AGlowingDot>(GlowingDot,LocStart,GetActorRotation(),SpawnParameters);
 		}
-		
-		
-		
+
 	}
 }
 
@@ -147,7 +142,6 @@ void AGhostCharacter::LightUp()
 {
 	if(AvailableDot>=SkillB)
 	{
-		
 		PRINT("Light Up");
 		AvailableDot-=SkillB;
 		OnCollected.Broadcast(0,AvailableDot);
@@ -175,9 +169,14 @@ void AGhostCharacter::LightUp()
 		PRINT_COMPLEX("%d", InsideSphere.Num());
 		for(auto& x : InsideSphere)
 		{
-			x->Destroy();
+			Cast<APacGhostEnemy>(x)->KilledByLight();
 		}
 	}
+}
+
+int AGhostCharacter::GetItem() const
+{
+	return CollectedItem;
 }
 
 // Called every frame
@@ -233,8 +232,8 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 	}
 	if(OtherActor->IsA(APacGhostEnemy::StaticClass()))
 	{
-		
-		OnEat.Broadcast(0);
+		GhostLife-=1;
+		OnEat.Broadcast(GhostLife);
 	}
 
 	

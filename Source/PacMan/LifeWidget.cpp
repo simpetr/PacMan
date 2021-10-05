@@ -18,6 +18,7 @@ void ULifeWidget::NativeConstruct()
 	}
 	if(TextGameOver&&ButtonRestart)
 	{
+		BlackGround->SetVisibility(ESlateVisibility::Hidden);
 		TextGameOver->SetVisibility(ESlateVisibility::Hidden);
 		ButtonRestart->SetVisibility(ESlateVisibility::Hidden);
 		ButtonRestart->OnClicked.AddDynamic(this,&ULifeWidget::RestartLevel);
@@ -30,8 +31,12 @@ bool ULifeWidget::CheckGameOver(int Value)
 	{
 		TextLife->SetText(FText::FromString("Life: "+FString::FromInt(Value)));
 	}
-	if(Value==0&&TextGameOver&&ButtonRestart)
+	if(Value==0&&TextGameOver&&ButtonRestart&&BlackGround)
 	{
+		if(TextLife->Visibility==ESlateVisibility::Visible)
+		{
+			TextLife->SetVisibility(ESlateVisibility::Hidden);
+		}
 		if(TextGameOver->Visibility == ESlateVisibility::Hidden)
 		{
 			TextGameOver->SetVisibility(ESlateVisibility::Visible);
@@ -39,6 +44,10 @@ bool ULifeWidget::CheckGameOver(int Value)
 		if(ButtonRestart->Visibility==ESlateVisibility::Hidden)
 		{
 			ButtonRestart->SetVisibility(ESlateVisibility::Visible);
+		}
+		if(BlackGround->Visibility==ESlateVisibility::Hidden)
+		{
+			BlackGround->SetVisibility(ESlateVisibility::Visible);
 		}
 		return true;
 	}

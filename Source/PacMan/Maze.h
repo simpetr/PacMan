@@ -42,7 +42,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	UStaticMesh* Wall;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="MazeSetup")
-	UStaticMesh* SpecialArea;
+	TSubclassOf<AActor> MazeExit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	TSubclassOf<ACollectable> PacDot;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
@@ -53,4 +53,16 @@ public:
 	TSubclassOf<APawn> Ghost;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	TSubclassOf<APawn> PacGhost;
+
+private:
+	TArray<APacGhostEnemy*> Enemies;
+	TArray<FVector> EnemiesSpawn;
+	UPROPERTY()
+	AGhostCharacter* Player;
+	FVector PlayerSpawn;
+
+	UFUNCTION()
+	void ResetPosition(int Value);
+	UFUNCTION()
+	void ResetEnemyKilled(AActor* Enemy);
 };

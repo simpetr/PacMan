@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "Collectable.h"
 #include "GhostCharacter.h"
+#include "MazeExit.h"
 #include "PacGhostEnemy.h"
 #include "Engine/EngineTypes.h"
 #include "Engine/StaticMeshActor.h"
@@ -26,8 +27,9 @@ AMaze::AMaze()
 void AMaze::BeginPlay()
 {
 	Super::BeginPlay();
-	UWorld* World = GetWorld();	
-	
+	UWorld* World = GetWorld();
+	bool IsExitCreated = false;
+	//LevelSeed = "1111111111111111111112000000000000000001101111101111011111011000010000000010000111110101111110101111110000000110000000111101011101101110121111010000011000001011100001010000101000013011110100001011110410010101000010101001110001010000101000111101000001100000101111010111011011101011110000000110000000111111010111111010111110000100000000102001101111101111011111011002000000000000000111111111111111111111";
 	const FVector MyLocation = GetActorLocation();
 	if(!World) return;
 	for(int i=0;i<XSize;i+=Offset)
@@ -41,7 +43,7 @@ void AMaze::BeginPlay()
 			int IndexJ= j/100;
 			//PRINT_COMPLEX("%d",IndexI);
 			//PRINT_COMPLEX("%d",IndexI*10+IndexJ);
-			int Index = LevelSeed[IndexI*10+IndexJ];
+			int Index = LevelSeed[IndexI*20+IndexJ];
 			if(Index=='1')
 			{
 				FVector Location = FVector(i,j,0)+MyLocation;
@@ -89,7 +91,9 @@ void AMaze::BeginPlay()
 				//GhostPlayer
 				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf+Offset,35)+MyLocation;
 				FActorSpawnParameters SpawnParameters;
-				AGhostCharacter* GhostPlayer = GetWorld()->SpawnActor<AGhostCharacter>(Ghost,Location,FRotator::ZeroRotator,SpawnParameters);
+				Player = GetWorld()->SpawnActor<AGhostCharacter>(Ghost,Location,FRotator::ZeroRotator,SpawnParameters);
+				PlayerSpawn = Location;
+				Player->OnEat.AddDynamic(this,&AMaze::ResetPosition);
 				continue;
 			}
 			if(Index=='6' && PacGhost)
@@ -98,7 +102,18 @@ void AMaze::BeginPlay()
 				FVector Location = FVector(i+OffsetHalf,j+OffsetHalf+Offset,0)+MyLocation;
 				FActorSpawnParameters SpawnParameters;
 				APacGhostEnemy* PacGhostEnemy = GetWorld()->SpawnActor<APacGhostEnemy>(PacGhost,Location,FRotator::ZeroRotator,SpawnParameters);
-				
+				PacGhostEnemy->OnPacManKilled.AddDynamic(this,&AMaze::ResetEnemyKilled);
+				Enemies.Add(PacGhostEnemy);
+				EnemiesSpawn.Add(Location);
+				continue;
+			}
+			if(Index=='7'&& !IsExitCreated && MazeExit )
+			{
+				//MazeExit
+				IsExitCreated = true;
+				FVector Location = FVector(i,j,0)+MyLocation;
+				FActorSpawnParameters SpawnParameters;
+				AMazeExit* Exit = GetWorld()->SpawnActor<AMazeExit>(MazeExit,Location,FRotator::ZeroRotator,SpawnParameters);
 			}
 			
 		}
@@ -137,7 +152,35 @@ void AMaze::SpawnStaticMeshActor(const FVector &InLocation) const
 	}*/
 }
 
+void AMaze::ResetPosition(int Value)
+{
+	if(Value>0)
+	{
+		Player->SetActorLocation(PlayerSpawn);
+		for(int i =0 ; i < Enemies.Num(); i++)
+		{
+			Enemies[i]->SetActorLocation(EnemiesSpawn[i]);
+		}
+	}else
+	{
+		for(auto& X: Enemies)
+		{
+			X->Destroy();
+		}
+		Enemies.Empty();
+		Player->Destroy();
+	}
+}
 
-
-
-
+void AMaze::ResetEnemyKilled(AActor* Enemy)
+{
+	if(Enemy)
+	{
+		PRINT("CHIAMATO DELEGATO");
+		APacGhostEnemy* X = Cast<APacGhostEnemy>(Enemy);
+		int Index = Enemies.Find(X);
+		X->SetActorLocation(EnemiesSpawn[Index]);
+		
+		
+	}
+}

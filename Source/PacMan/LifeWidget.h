@@ -40,5 +40,8 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta = (BindWidget))
 	class UButton* ButtonRestart;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta = (BindWidget))
+	class UImage* BlackGround;
 	
 };

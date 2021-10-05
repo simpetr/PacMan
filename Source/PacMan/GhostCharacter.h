@@ -49,6 +49,8 @@ public:
 	FPlayerEaten OnEat;
 
 	bool IsSkillActive() const;
+
+	int GetItem() const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -60,6 +62,8 @@ protected:
 
 	void Fire();
 	void LightUp();
+
+	
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Player")
 	float BaseTurnRate;

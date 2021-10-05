@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "GhostCharacter.h"
-
-
 #include "PacGhostAIController.generated.h"
 
 /**
@@ -19,19 +17,20 @@ class PACMAN_API APacGhostAIController : public AAIController
 {
 	GENERATED_BODY()
 
-	public:
+public:
 
 	virtual void BeginPlay() override;
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 	virtual void OnPossess(APawn* InPawn) override;
+	void SetPhasesDuration(int Chasing, int Scattering);
 	FTimerHandle TimerHandle;
 	FTimerHandle PhaseHandler;
 
-	private:
+private:
 	bool IsScattering = false;
 	bool IsChasing = false;
 	int ScatteringTime = 4;
-	int ChasingTime= 10;
+	int ChasingTime = 10;
 	UPROPERTY()
 	AGhostCharacter* Player;
 	UPROPERTY()

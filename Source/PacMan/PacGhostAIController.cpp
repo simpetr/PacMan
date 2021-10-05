@@ -30,7 +30,7 @@ void APacGhostAIController::BeginPlay()
 	{
 		PRINT_COMPLEX("%s", *NavMesh->GetName());
 	}
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &APacGhostAIController::ScatterPhase, 0.1f, false, 1.f);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &APacGhostAIController::ScatterPhase, 0.1f, false, 2.f);
 }
 
 void APacGhostAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
@@ -50,7 +50,14 @@ void APacGhostAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathF
 void APacGhostAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+	PRINT("POSSESED");
 	ControlledPawn = Cast<APacGhostEnemy>(InPawn);
+}
+
+void APacGhostAIController::SetPhasesDuration(int Chasing, int Scattering)
+{
+	ChasingTime = Chasing;
+	ScatteringTime = Scattering;
 }
 
 void APacGhostAIController::ScatterPhase()
@@ -59,8 +66,8 @@ void APacGhostAIController::ScatterPhase()
 	FNavLocation RandomLocation;
 	const FVector AILocation = ControlledPawn->GetActorLocation();
 	//FVector RandomLocation = NavMesh->GetRandomReachablePointInRadius(this,ControlledPawn->GetActorLocation(),1000.f );
-	NavMesh->GetRandomReachablePointInRadius(AILocation, 600.f, RandomLocation);
-	DrawDebugSphere(GetWorld(), RandomLocation.Location, 20.f, 15, FColor::Red, false, 2);
+	NavMesh->GetRandomReachablePointInRadius(AILocation, 500.f, RandomLocation);
+	//DrawDebugSphere(GetWorld(), RandomLocation.Location, 20.f, 15, FColor::Red, false, 2);
 	MoveToLocation(RandomLocation.Location);
 
 	if (!IsScattering)
@@ -68,6 +75,7 @@ void APacGhostAIController::ScatterPhase()
 		PRINT("DENTRO");
 		GetWorldTimerManager().ClearTimer(PhaseHandler);
 		GetWorldTimerManager().SetTimer(PhaseHandler, this, &APacGhostAIController::ChasingPhase, ScatteringTime, false);
+		PRINT_COMPLEX("%d",ScatteringTime);
 		IsScattering = true;
 		IsChasing = false;
 	}

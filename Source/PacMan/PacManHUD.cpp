@@ -75,6 +75,9 @@ void APacManHUD::CheckGameOver(int Value)
 		APlayerController* PC = GetWorld()->GetFirstPlayerController();
 		if(PC)
 		{
+			PacDot->SetVisibility(ESlateVisibility::Hidden);
+			Skills->SetVisibility(ESlateVisibility::Hidden);
+			Item->SetVisibility(ESlateVisibility::Hidden);
 			FInputModeUIOnly InputModeData;
 			InputModeData.SetWidgetToFocus(GameOver->ButtonRestart->TakeWidget());
 			//InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);

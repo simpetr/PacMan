@@ -46,8 +46,15 @@ void APacGhostEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	{
 		if(Cast<AGhostCharacter>(OtherActor)->IsSkillActive())
 		{
-			Destroy();
+			OnPacManKilled.Broadcast(this);
 		}
 	}
 }
+
+void APacGhostEnemy::KilledByLight()
+{
+	OnPacManKilled.Broadcast(this);
+}
+
+
 

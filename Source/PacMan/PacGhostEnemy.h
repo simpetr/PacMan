@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 #include "GameFramework/Character.h"
 #include "PacGhostEnemy.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPacManKilled,AActor*, Ghost);
 UCLASS()
 class PACMAN_API APacGhostEnemy : public ACharacter
 {
@@ -16,6 +19,9 @@ public:
 	APacGhostEnemy();
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Enemy settings")
 	UStaticMeshComponent*  PacGhostMesh;
+
+	UPROPERTY(BlueprintAssignable)
+	FPacManKilled OnPacManKilled;
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,4 +38,5 @@ public:
 	UFUNCTION()
     void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	void KilledByLight();
 };
