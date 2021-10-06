@@ -18,9 +18,9 @@ class PACMAN_API USkillsWidget : public UUserWidget
 	
 	public:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
-	int PacDotSkillA=0;
+	int PacDotSkillA=5;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Settings")
-	int PacDotSkillB=0;
+	int PacDotSkillB=20;
 	
 	USkillsWidget(const FObjectInitializer& ObjectInitializer);
 

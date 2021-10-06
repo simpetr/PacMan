@@ -7,7 +7,6 @@
 #include "SoundManager.generated.h"
 
 
-class USceneComponent;
 UCLASS()
 class PACMAN_API ASoundManager : public AActor
 {
@@ -26,6 +25,8 @@ public:
 	USoundBase* EatItem;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category= "Audiotrack")
 	USoundBase* EatPacGhost;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category= "Audiotrack")
+	USoundBase* GotEat;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category= "Audiotrack")
 	USoundBase* GameOver;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category= "Audiotrack")
@@ -52,5 +53,6 @@ public:
 	void SomethingEat(int TypeCollected, int Value);
 	UFUNCTION()
     void CheckGameOver(int Value);
-
+	UFUNCTION()
+	void PacManGhostEat(AActor* Enemy);
 };

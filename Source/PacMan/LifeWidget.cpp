@@ -17,7 +17,7 @@ void ULifeWidget::NativeConstruct()
 	}
 	if (TextGameOver && ButtonRestart)
 	{
-		BlackGround->SetVisibility(ESlateVisibility::Hidden);
+		BackGround->SetVisibility(ESlateVisibility::Hidden);
 		TextGameOver->SetVisibility(ESlateVisibility::Hidden);
 		ButtonRestart->SetVisibility(ESlateVisibility::Hidden);
 		ButtonRestart->OnClicked.AddDynamic(this, &ULifeWidget::RestartLevel);
@@ -39,8 +39,11 @@ bool ULifeWidget::CheckGameOver(int Value)
 		ButtonRestart->SetVisibility(ESlateVisibility::Visible);
 
 
-		BlackGround->SetVisibility(ESlateVisibility::Visible);
+		BackGround->SetVisibility(ESlateVisibility::Visible);
 		return true;
+	}else
+	{
+		PlayAnimation(RestartFading);
 	}
 	return false;
 }

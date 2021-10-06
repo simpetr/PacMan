@@ -51,9 +51,6 @@ void APacGhostAIController::OnPossess(APawn* InPawn)
 void APacGhostAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
 {
 	Super::OnMoveCompleted(RequestID, Result);
-	//PRINT_COMPLEX("%s",*Result.ToString());
-	/*GetWorldTimerManager().ClearTimer(TimerHandle);
-	GetWorldTimerManager().SetTimer(TimerHandle,this,&APacGhostAIController::ScatterPhase,0.1f,false,0.2f);*/
 	if (Result.Code == (EPathFollowingResult::Aborted))
 	{
 		PRINT_ERROR("RICERCA FALLITA VADO GIRANDO!");

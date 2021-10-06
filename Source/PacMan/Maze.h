@@ -37,7 +37,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	int Offset=100;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
-	float ScaleFactor;
+	float ScaleFactor=20;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	FString LevelSeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
@@ -63,12 +63,16 @@ private:
 	TArray<FVector> EnemiesSpawn;
 	UPROPERTY()
 	AGhostCharacter* Player;
+	UPROPERTY()
+	ASoundManager* Audio;
 	FVector PlayerSpawn;
-	FTimerHandle PacManGhostHandler;
+	FTimerHandle EnemySpawnHandle;
+	FTimerHandle ResetHandle;
 	int SpawnCounter;
 
 	UFUNCTION()
 	void ResetPosition(int Value);
+	void ResetPosition2();
 	UFUNCTION()
 	void ResetEnemyKilled(AActor* Enemy);
 	UFUNCTION()

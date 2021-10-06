@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "StartingParameters.h"
+
 #include "Blueprint/UserWidget.h"
 #include "Runtime/UMG/Public/UMG.h"
 #include "LifeWidget.generated.h"
@@ -12,7 +12,7 @@
 /**
  * 
  */
-class USoundBase;
+
 UCLASS()
 class PACMAN_API ULifeWidget : public UUserWidget
 {
@@ -45,6 +45,9 @@ public:
 	class UButton* ButtonRestart;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta = (BindWidget))
-	class UImage* BlackGround;
+	class UImage* BackGround;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Transient, meta = ( BindWidgetAnim ) )
+	class UWidgetAnimation* RestartFading;
 	
 };

@@ -71,5 +71,13 @@ void ASoundManager::CheckGameOver(int Value)
 	{
 		MainAudio->Stop();
 		UGameplayStatics::PlaySound2D(this,GameOver);
+	}else
+	{
+		UGameplayStatics::PlaySound2D(this,GotEat);
 	}
+}
+
+void ASoundManager::PacManGhostEat(AActor* Enemy)
+{
+	UGameplayStatics::PlaySound2D(this,EatPacGhost);
 }

@@ -59,7 +59,7 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
 	int SkillA = 5;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
-	int SkillB = 10;
+	int SkillB = 20;
 	
 protected:
 	// Called when the game starts or when spawned
