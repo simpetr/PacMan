@@ -12,11 +12,12 @@ void USkillsWidget::NativeConstruct()
 	Super::NativeConstruct();
 	TextPacDotNeedA->SetText(FText::FromString("Dots: "+ FString::FromInt(PacDotSkillA)));
 	TextPacDotNeedB->SetText(FText::FromString("Dots: "+FString::FromInt(PacDotSkillB)));
-	EnableSkills(0);
+	CheckSkills(0);
 }
 
-void USkillsWidget::EnableSkills(int Value) const
+void USkillsWidget::CheckSkills(int Value) const
 {
+	TextCounter->SetText(FText::FromString("Dots: "+FString::FromInt(Value)));
 	if(Value >= PacDotSkillA)
 		ImageAlphaA->SetOpacity(0.f);
 	else

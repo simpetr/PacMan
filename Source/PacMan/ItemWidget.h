@@ -10,6 +10,7 @@
 /**
  * 
  */
+class USoundBase;
 UCLASS()
 class PACMAN_API UItemWidget : public UUserWidget
 {
@@ -28,5 +29,10 @@ public:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
     class UTextBlock* TextEscape;
+
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
+	int ItemsToCollect = 4;
+
+
 	
 };

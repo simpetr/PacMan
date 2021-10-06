@@ -11,9 +11,12 @@ class UCameraComponent;
 class UStaticMeshComponent;
 class UPointLightComponent;
 class AGlowingDot;
+class USoundBase;
 class UStaticMesh;
 
+//Delegate called when a dot or special item is collected or consumed
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCollectedElement, int, TypeCollected, int , Value);
+//Delegate called when the player is eaten
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerEaten, int, Life);
 UCLASS()
 class PACMAN_API AGhostCharacter : public ACharacter
@@ -48,9 +51,16 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FPlayerEaten OnEat;
 
-	bool IsSkillActive() const;
-
+	bool IsPlayerInvulnerable() const;
 	int GetItem() const;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
+	int GhostLife = 3;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
+	int SkillA = 5;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
+	int SkillB = 10;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -58,17 +68,9 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void TurnAtRate(float Value);
-	void LookUpAtRate(float Value);
-
-	void Fire();
-	void LightUp();
-
-	
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Player")
 	float BaseTurnRate;
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Player")
-	float BaseLookUpAtRate;
 
 public:	
 	// Called every frame
@@ -83,14 +85,14 @@ public:
 
 private:
 
-	int CollectedDot = 0;
+	void Fire();
+	void LightUp();
+	
 	int AvailableDot = 0;
 	int CollectedItem = 0;
-	int GhostLife = 3;
-	int SkillA = 5;
-	int SkillB = 10;
+	
 	bool IsPressed = false;
-	bool SkillEnd = false;
+	bool IsInvulnerable = false;
 
 	float LerpDuration = 1.5f;
 	float ElapsedTme =0.f;
@@ -98,12 +100,14 @@ private:
 	int ColorEnd;
 	int IntensityStart;
 	int IntensityEnd;
-
+	int AttenuationRadiusStart;
+	int AttenuationRadiusEnd;
+	
 	UPROPERTY()
 	UStaticMesh* ScaredGhostMesh;
 
 	FTimerHandle TimerHandle;
-	float TimeEnd= 2.f;
 
 	void StopSkill();
+	void RevertLight();
 };

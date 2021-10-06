@@ -26,7 +26,7 @@ class PACMAN_API USkillsWidget : public UUserWidget
 
 	virtual void NativeConstruct() override;
 
-	void EnableSkills(int Value) const;
+	void CheckSkills(int Value) const;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
 	class UTextBlock* TextSkillDigitA;
@@ -51,5 +51,8 @@ class PACMAN_API USkillsWidget : public UUserWidget
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
 	class UImage* ImageAlphaB;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
+	class UTextBlock* TextCounter;
 	
 };

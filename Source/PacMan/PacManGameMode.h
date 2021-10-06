@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "PacManGameMode.generated.h"
-
+//Set in blueprint
 UCLASS(minimalapi)
 class APacManGameMode : public AGameModeBase
 {

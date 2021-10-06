@@ -6,13 +6,11 @@
 #include "GameFramework/HUD.h"
 #include "PacManHUD.generated.h"
 
-/**
- * 
- */
-class UPacDotWidget;
+
 class UItemWidget;
 class USkillsWidget;
 class ULifeWidget;
+class USoundCue;
 UCLASS()
 class PACMAN_API APacManHUD : public AHUD
 {
@@ -25,16 +23,17 @@ public:
 
 	virtual void BeginPlay() override;
 
-	virtual void Tick(float DeltaSeconds) override;
+	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
+	TSubclassOf<UItemWidget> ItemWidget;
+	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
+	TSubclassOf<USkillsWidget> SkillsWidget;
+	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
+	TSubclassOf<ULifeWidget> LifeWidget;
 
+	//Full blueprint only for starting fade
 	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
-	TSubclassOf<UUserWidget> ItemWidget;
-	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
-	TSubclassOf<UUserWidget> DotWidget;
-	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
-	TSubclassOf<UUserWidget> SkillsWidget;
-	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
-	TSubclassOf<UUserWidget> LifeWidget;
+	TSubclassOf<UUserWidget> StartFade;
+	
 	
 	UFUNCTION()
 	void UpdateUI(int TypeCollected, int Value);
@@ -44,11 +43,13 @@ public:
 
 private:
 	UPROPERTY();
-	UPacDotWidget* PacDot;
-	UPROPERTY();
 	UItemWidget* Item;
 	UPROPERTY()
 	USkillsWidget* Skills;
 	UPROPERTY()
 	ULifeWidget* GameOver;
+
+	UPROPERTY()
+	UUserWidget* Fade;
+	
 };

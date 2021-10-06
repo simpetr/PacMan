@@ -11,6 +11,7 @@ class ACollectable;
 class ATeleport;
 class AGhostCharacter;
 class APacGhostEnemy;
+class ASoundManager;
 UCLASS()
 class PACMAN_API AMaze : public AActor
 {
@@ -53,6 +54,9 @@ public:
 	TSubclassOf<APawn> Ghost;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
 	TSubclassOf<APawn> PacGhost;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
+	TSubclassOf<ASoundManager> AudioManager;
+	
 
 private:
 	TArray<APacGhostEnemy*> Enemies;
@@ -60,9 +64,13 @@ private:
 	UPROPERTY()
 	AGhostCharacter* Player;
 	FVector PlayerSpawn;
+	FTimerHandle PacManGhostHandler;
+	int SpawnCounter;
 
 	UFUNCTION()
 	void ResetPosition(int Value);
 	UFUNCTION()
 	void ResetEnemyKilled(AActor* Enemy);
+	UFUNCTION()
+	void SpawnPacManGhost();
 };

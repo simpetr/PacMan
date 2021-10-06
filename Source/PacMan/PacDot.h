@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "Collectable.h"
 #include "PacDot.generated.h"
-
+//Class representing collectable yellow dots
 UCLASS()
 class PACMAN_API APacDot : public ACollectable
 {

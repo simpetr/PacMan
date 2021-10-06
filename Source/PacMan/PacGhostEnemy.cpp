@@ -44,14 +44,15 @@ void APacGhostEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	if(!OtherActor) return;
 	if(OtherActor->IsA(AGhostCharacter::StaticClass()))
 	{
-		if(Cast<AGhostCharacter>(OtherActor)->IsSkillActive())
+		//If the player is invulnerable the ghost is killed instead of killing the player
+		if(Cast<AGhostCharacter>(OtherActor)->IsPlayerInvulnerable())
 		{
 			OnPacManKilled.Broadcast(this);
 		}
 	}
 }
 
-void APacGhostEnemy::KilledByLight()
+void APacGhostEnemy::KillGhost()
 {
 	OnPacManKilled.Broadcast(this);
 }

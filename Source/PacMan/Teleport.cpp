@@ -2,14 +2,10 @@
 
 
 #include "Teleport.h"
-
 #include "Components/BoxComponent.h"
-#include "Kismet/GameplayStatics.h"
 
+//Class representing the teleporting block
 
-#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
-#define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
-#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}
 // Sets default values
 ATeleport::ATeleport()
 {
@@ -22,31 +18,24 @@ ATeleport::ATeleport()
 	
 
 }
-
-// Called when the game starts or when spawned
-void ATeleport::BeginPlay()
+//Set when the object is spawned in Maze.cpp
+//@param Offset (already scaled on the maze size) that represents where the
+//actor should appear when entering the teleport block.
+void ATeleport::SetTeleportDirection(const FVector& Offset)
 {
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void ATeleport::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void ATeleport::SetTeleportDirection(const FVector& Direction)
-{
-	TeleportDirection = Direction;
-	Connection =GetActorLocation()+Direction;
-	//PRINT_COMPLEX("%s",*Connection.ToString());
+	Connection =GetActorLocation()+Offset;
 }
 
 void ATeleport::OnOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
 	if(OtherActor)
 		OtherActor->SetActorLocation(Connection);
+}
+
+// Called when the game starts or when spawned
+void ATeleport::BeginPlay()
+{
+	Super::BeginPlay();
+	
 }
 

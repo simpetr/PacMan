@@ -22,15 +22,16 @@ public:
 	virtual void BeginPlay() override;
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 	virtual void OnPossess(APawn* InPawn) override;
-	void SetPhasesDuration(int Chasing, int Scattering);
+	//void SetPhasesDuration(int Chasing, int Scattering);
 	FTimerHandle TimerHandle;
-	FTimerHandle PhaseHandler;
+	FTimerHandle ChasingHandle;
+	FTimerHandle ScatteringHandle;
 
 private:
 	bool IsScattering = false;
 	bool IsChasing = false;
-	int ScatteringTime = 4;
-	int ChasingTime = 10;
+	int ScatteringTime = 6;
+	int ChasingTime = 5;
 	UPROPERTY()
 	AGhostCharacter* Player;
 	UPROPERTY()
@@ -39,5 +40,6 @@ private:
 	UNavigationSystemV1* NavMesh;
 	void ScatterPhase();
 	void ChasingPhase();
+	UFUNCTION()
 	void ReactToPlayerAction(int TypeCollected, int Value);
 };

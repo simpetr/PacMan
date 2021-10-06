@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-
 #include "GameFramework/Actor.h"
 #include "GlowingDot.generated.h"
 
-
+//Class representig a glowing dot that move in a straight line
+class UStaticMeshComponent;
+class USceneComponent;
 class UPointLightComponent;
 UCLASS()
 class PACMAN_API AGlowingDot : public AActor
@@ -27,7 +27,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)
 	USceneComponent* Root;
 
@@ -41,5 +40,5 @@ public:
     virtual void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly)
-	float Speed = 220.f;
+	float Speed = 240.f;
 };

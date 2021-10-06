@@ -22,60 +22,63 @@ void APacManHUD::DrawHUD()
 void APacManHUD::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if(ItemWidget && DotWidget && SkillsWidget)
+	//Create widgets
+	if(ItemWidget && SkillsWidget && LifeWidget)
 	{
-		PacDot = CreateWidget<UPacDotWidget>(GetWorld(),DotWidget);
+		Fade = CreateWidget<UUserWidget>(GetWorld(),StartFade);
 		Item = CreateWidget<UItemWidget>(GetWorld(),ItemWidget);
 		Skills = CreateWidget<USkillsWidget>(GetWorld(),SkillsWidget);
 		GameOver = CreateWidget<ULifeWidget>(GetWorld(),LifeWidget);
-		if(PacDot&&Item&&Skills&&GameOver)
+		
+		if(Item && Skills && GameOver && Fade)
 		{
-			PacDot->AddToViewport();
+			Fade->AddToViewport();
 			Item->AddToViewport();
 			Skills->AddToViewport();
 			GameOver->AddToViewport();
 		}
 	}
 
+	//Add Dynamic bind with the Player delegates
 	AGhostCharacter* Player = Cast<AGhostCharacter>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 	if(Player)
 	{
 		Player->OnCollected.AddDynamic(this,&APacManHUD::UpdateUI);
 		Player->OnEat.AddDynamic(this,&APacManHUD::CheckGameOver);
 	}
-}
 
-void APacManHUD::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
+	
 }
 
 //TODO change with an Enum
+//Called when the player collect a yellow dot or a item.
 void APacManHUD::UpdateUI(int TypeCollected, int Value)
 {
 	switch (TypeCollected)
 	{
 		case 0:
-			PacDot->UpdateCount(Value);
-			Skills->EnableSkills(Value);
+			//Collected yellow dot
+			Skills->CheckSkills(Value);
 			break;
 		case 1:
+			//Collected item
 			Item->UpdateCount(Value);
 			break;
 		default:
 			break;
 	}	
 }
-
+//Called when the player is eaten by a ghost.
 void APacManHUD::CheckGameOver(int Value)
 {
+	//if the player has no life anymore
+	//hide all the widgets and active the
+	//only UI mode
 	if(GameOver->CheckGameOver(Value))
 	{
 		APlayerController* PC = GetWorld()->GetFirstPlayerController();
 		if(PC)
 		{
-			PacDot->SetVisibility(ESlateVisibility::Hidden);
 			Skills->SetVisibility(ESlateVisibility::Hidden);
 			Item->SetVisibility(ESlateVisibility::Hidden);
 			FInputModeUIOnly InputModeData;
@@ -87,5 +90,4 @@ void APacManHUD::CheckGameOver(int Value)
 			PC->bEnableMouseOverEvents = true;
 		}
 	}
-	//TOOD Something extra?
 }

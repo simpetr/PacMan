@@ -5,10 +5,6 @@
 #include "Components/PointLightComponent.h"
 #include "Engine/StaticMeshActor.h"
 
-
-#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
-#define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
-#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}
 // Sets default values
 AGlowingDot::AGlowingDot()
 {
@@ -29,6 +25,7 @@ AGlowingDot::AGlowingDot()
 }
 
 // Called when the game starts or when spawned
+//Set point light parameters
 void AGlowingDot::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,7 +35,6 @@ void AGlowingDot::BeginPlay()
 	LightArea->SetSourceRadius(200.f);
 	LightArea->SetSoftSourceRadius(200.f);
 	LightArea->SetCastShadows(false);
-	//TODO tune color, in bluprint the light is set to yellow
 	LightArea->bUseTemperature = true;
 	LightArea->SetTemperature(12000);
 	LightArea->SetMobility(EComponentMobility::Movable);
@@ -56,7 +52,6 @@ void AGlowingDot::Tick(float DeltaTime)
 
 void AGlowingDot::OnOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	PRINT("INSIDE");
 	if(!OtherActor) return;
 	if(OtherActor->IsA(AStaticMeshActor::StaticClass()))
 	{

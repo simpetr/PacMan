@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "StartingParameters.h"
 #include "Blueprint/UserWidget.h"
 #include "Runtime/UMG/Public/UMG.h"
 #include "LifeWidget.generated.h"
@@ -10,6 +12,7 @@
 /**
  * 
  */
+class USoundBase;
 UCLASS()
 class PACMAN_API ULifeWidget : public UUserWidget
 {

@@ -8,8 +8,8 @@
 
 class USceneComponent;
 class UStaticMeshComponent;
-class USphereComponent;
 UCLASS()
+//Class representing objects that can be collected
 class PACMAN_API ACollectable : public AActor
 {
 	GENERATED_BODY()

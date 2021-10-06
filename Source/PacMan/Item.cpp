@@ -2,25 +2,28 @@
 
 
 #include "Item.h"
+#include "GhostCharacter.h"
 
-#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
-#define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
-#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}
+//Class representing collectable special items
 
 AItem::AItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+//Add a constant rotation to the item
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FRotator Rotation = FRotator(0.f, 10.f, 0.f);
+	const FRotator Rotation = FRotator(0.f, 10.f, 0.f);
 	AddActorWorldRotation(Rotation * DeltaTime);
 }
-
+//Destroyed when overlapped by the player
 void AItem::OnOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	PRINT("Item");
-	Destroy();
+	if(!OtherActor) return;
+	if(OtherActor->IsA(AGhostCharacter::StaticClass()))
+	{
+		Destroy();
+	}
 }

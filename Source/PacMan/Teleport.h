@@ -16,23 +16,19 @@ public:
 	// Sets default values for this actor's properties
 	ATeleport();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	UBoxComponent* BoxCollider;
 
-private:
-	FVector TeleportDirection;
-	FVector Connection;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	void SetTeleportDirection(const FVector& Direction);
+	void SetTeleportDirection(const FVector& Offset);
+	
 	UFUNCTION()
     void OnOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
-	UBoxComponent* BoxCollider;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
+private:
+	FVector Connection;	
 
 };
