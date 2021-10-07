@@ -100,7 +100,7 @@ void AMaze::BeginPlay()
 				Player = GetWorld()->SpawnActor<AGhostCharacter>(Ghost, Location, FRotator::ZeroRotator,
 				                                                 SpawnParameters);
 				PlayerSpawn = Location;
-				Player->OnEat.AddDynamic(this, &AMaze::ResetPosition);
+				Player->OnEat.AddDynamic(this, &AMaze::ResetNotification);
 				continue;
 			}
 			//Enemies character (pivot center)
@@ -108,10 +108,7 @@ void AMaze::BeginPlay()
 			{
 				//PacGhostEnemy
 				FVector Location = FVector(i + OffsetHalf, j + OffsetHalf + Offset, 0) + MyLocation;
-
-				//APacGhostEnemy* PacGhostEnemy = GetWorld()->SpawnActor<APacGhostEnemy>(PacGhost,Location,FRotator::ZeroRotator,SpawnParameters);
-				//PacGhostEnemy->OnPacManKilled.AddDynamic(this,&AMaze::ResetEnemyKilled);
-				//Enemies.Add(PacGhostEnemy);
+				//Ghost are spawned one by one after the maze initilization
 				EnemiesSpawn.Add(Location);
 				continue;
 			}
@@ -145,11 +142,6 @@ void AMaze::BeginPlay()
 	GetWorldTimerManager().SetTimer(EnemySpawnHandle, this, &AMaze::SpawnPacManGhost, 1.f, true, 1.f);
 }
 
-// Called every frame
-void AMaze::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 //Spawn Wall
 void AMaze::SpawnStaticMeshActor(const FVector& InLocation) const
@@ -164,17 +156,18 @@ void AMaze::SpawnStaticMeshActor(const FVector& InLocation) const
 
 //When the player is eaten reset all actors in their starting position
 //if the play has no life the game end.
-void AMaze::ResetPosition(int Value)
+void AMaze::ResetNotification(int Value)
 {
 	if (Value > 0)
 	{
-		//Player->SetActorHiddenInGame(true);
-		//Player->SetHidden(true);
+		Player->SetActorEnableCollision(false);
+		
 		for (int i = 0; i < Enemies.Num(); i++)
 		{
 			Enemies[i]->SetActorHiddenInGame(true);
+			Enemies[i]->SetActorEnableCollision(false);
 		}
-		GetWorldTimerManager().SetTimer(ResetHandle, this, &AMaze::ResetPosition2, 1.2f, false);
+		GetWorldTimerManager().SetTimer(ResetHandle, this, &AMaze::ResetPosition, 1.2f, false);
 	}
 	else
 	{
@@ -187,15 +180,16 @@ void AMaze::ResetPosition(int Value)
 	}
 }
 
-void AMaze::ResetPosition2()
+void AMaze::ResetPosition()
 {
-	//Player->SetActorHiddenInGame(false);
-	//Player->SetHidden(false);
+	
 	
 	Player->SetActorLocation(PlayerSpawn);
+	Player->SetActorEnableCollision(true);
 	for (int i = 0; i < Enemies.Num(); i++)
 	{
 		Enemies[i]->SetActorHiddenInGame(false);
+		Enemies[i]->SetActorEnableCollision(true);
 		Enemies[i]->SetActorLocation(EnemiesSpawn[i]);
 	}
 }
@@ -204,7 +198,6 @@ void AMaze::ResetEnemyKilled(AActor* Enemy)
 {
 	if (Enemy)
 	{
-		PRINT("CHIAMATO DELEGATO");
 		APacGhostEnemy* X = Cast<APacGhostEnemy>(Enemy);
 		int Index = Enemies.Find(X);
 		X->SetActorLocation(EnemiesSpawn[Index]);

@@ -10,6 +10,8 @@
 /**
  * 
  */
+class UTextBlock;
+class UImage;
 UCLASS()
 class PACMAN_API USkillsWidget : public UUserWidget
 {
@@ -20,7 +22,7 @@ class PACMAN_API USkillsWidget : public UUserWidget
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
 	int PacDotSkillA=5;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Settings")
-	int PacDotSkillB=20;
+	int PacDotSkillB=25;
 	
 	USkillsWidget(const FObjectInitializer& ObjectInitializer);
 
@@ -29,30 +31,30 @@ class PACMAN_API USkillsWidget : public UUserWidget
 	void CheckSkills(int Value) const;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextSkillDigitA;
+	UTextBlock* TextSkillDigitA;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextPacDotNeedA;
+	UTextBlock* TextPacDotNeedA;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextSkillNameA;
+	UTextBlock* TextSkillNameA;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UImage* ImageAlphaA;
+	UImage* ImageAlphaA;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextSkillDigitB;
+	UTextBlock* TextSkillDigitB;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextPacDotNeedB;
+	UTextBlock* TextPacDotNeedB;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextSkillNameB;
+	UTextBlock* TextSkillNameB;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UImage* ImageAlphaB;
+	UImage* ImageAlphaB;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextCounter;
+	UTextBlock* TextCounter;
 	
 };

@@ -50,8 +50,7 @@ void APacManHUD::BeginPlay()
 	
 }
 
-//TODO change with an Enum
-//Called when the player collect a yellow dot or a item.
+//Called when the player collect a yellow dot or a special item.
 void APacManHUD::UpdateUI(int TypeCollected, int Value)
 {
 	switch (TypeCollected)
@@ -83,7 +82,6 @@ void APacManHUD::CheckGameOver(int Value)
 			Item->SetVisibility(ESlateVisibility::Hidden);
 			FInputModeUIOnly InputModeData;
 			InputModeData.SetWidgetToFocus(GameOver->ButtonRestart->TakeWidget());
-			//InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 			PC->SetInputMode(InputModeData);
 			PC->bShowMouseCursor = true;
 			PC->bEnableClickEvents = true;

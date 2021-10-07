@@ -79,7 +79,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// declare overlap begin function
+	// declare overlapbegin function
 	UFUNCTION()
     void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -96,12 +96,12 @@ private:
 
 	float LerpDuration = 1.5f;
 	float ElapsedTme =0.f;
-	int ColorStart;
-	int ColorEnd;
-	int IntensityStart;
-	int IntensityEnd;
-	int AttenuationRadiusStart;
-	int AttenuationRadiusEnd;
+	int ColorStart = 12000;
+	int ColorEnd = 3500;
+	float IntensityStart = 3.2f;
+	float  IntensityEnd = 10.f;
+	int AttenuationRadiusStart = 250.f;
+	int AttenuationRadiusEnd = 300;
 	
 	UPROPERTY()
 	UStaticMesh* ScaredGhostMesh;

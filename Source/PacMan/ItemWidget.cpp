@@ -14,7 +14,8 @@ void UItemWidget::NativeConstruct()
 	UpdateCount(0);
 	TextEscape->SetVisibility(ESlateVisibility::Hidden);
 }
-
+//Update Text when an Item is collected. When all special items are collected
+//an extra message appears
 void UItemWidget::UpdateCount(int Value) const
 {
 	TextCounter->

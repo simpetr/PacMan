@@ -22,10 +22,8 @@ public:
 	virtual void BeginPlay() override;
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 	virtual void OnPossess(APawn* InPawn) override;
-	//void SetPhasesDuration(int Chasing, int Scattering);
 	FTimerHandle TimerHandle;
-	FTimerHandle ChasingHandle;
-	FTimerHandle ScatteringHandle;
+	FTimerHandle PhaseHandle;
 
 private:
 	bool IsScattering = false;

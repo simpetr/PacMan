@@ -11,7 +11,7 @@ ACollectable::ACollectable()
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = Root;
 	
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Dot");
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	Mesh->SetupAttachment(Root);
 
 	OnActorBeginOverlap.AddDynamic(this,&ACollectable::OnOverlap);

@@ -51,7 +51,9 @@ void APacGhostEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		}
 	}
 }
-
+// Called to kill the ghost ( the method is called when
+//the player first active the "lightUp" skill.
+//All ghost overlapping a certain radius are killed.
 void APacGhostEnemy::KillGhost()
 {
 	OnPacManKilled.Broadcast(this);

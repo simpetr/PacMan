@@ -11,7 +11,7 @@
 ASoundManager::ASoundManager()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = Root;
 
@@ -33,13 +33,7 @@ void ASoundManager::BeginPlay()
 		Player->OnEat.AddDynamic(this,&ASoundManager::CheckGameOver);
 	}
 }
-
-// Called every frame
-void ASoundManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
+//Bind called when a yellow dot or item is collected
 void ASoundManager::SomethingEat(int TypeCollected, int Value)
 {
 	switch (TypeCollected)
@@ -49,7 +43,7 @@ void ASoundManager::SomethingEat(int TypeCollected, int Value)
 		UGameplayStatics::PlaySound2D(this, EatDot);
 		break;
 	case 1:
-		//Collected item
+		//Collected all special items
 		if (Value == ItemToCollect)
 		{
 			UGameplayStatics::PlaySound2D(this, Notification);
@@ -64,9 +58,10 @@ void ASoundManager::SomethingEat(int TypeCollected, int Value)
 		break;
 	}
 }
-
+//Bind called when the player is eaten by a enemy
 void ASoundManager::CheckGameOver(int Value)
 {
+	//if player has no life anymore = Gameover sound
 	if(Value == 0)
 	{
 		MainAudio->Stop();
@@ -76,7 +71,7 @@ void ASoundManager::CheckGameOver(int Value)
 		UGameplayStatics::PlaySound2D(this,GotEat);
 	}
 }
-
+//Bind called when a ghost is eaten, this function get bind directly when I create the enemies
 void ASoundManager::PacManGhostEat(AActor* Enemy)
 {
 	UGameplayStatics::PlaySound2D(this,EatPacGhost);

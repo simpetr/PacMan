@@ -25,13 +25,17 @@ AGhostCharacter::AGhostCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->TargetArmLength = 420;
+	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+	
 	GhostMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
 	GhostMesh->SetupAttachment(RootComponent);
+	
 	GhostVisionArea = CreateDefaultSubobject<UPointLightComponent>("GhostVision");
 	GhostVisionArea->SetupAttachment(GhostMesh);
 
@@ -49,15 +53,15 @@ void AGhostCharacter::BeginPlay()
 
 	/*Setting up light parameters*/
 	GhostVisionArea->SetIntensityUnits(ELightUnits::Candelas);
-	GhostVisionArea->SetIntensity(3.2f);
-	GhostVisionArea->SetAttenuationRadius(250.f);
+	GhostVisionArea->SetIntensity(IntensityStart);
+	GhostVisionArea->SetAttenuationRadius(AttenuationRadiusStart);
 	GhostVisionArea->SetSourceRadius(200.f);
 	GhostVisionArea->SetSoftSourceRadius(200.f);
 	GhostVisionArea->SetCastShadows(false);
 	GhostVisionArea->bUseTemperature = true;
-	GhostVisionArea->SetTemperature(12000);
+	GhostVisionArea->SetTemperature(ColorStart);
 	GhostVisionArea->SetMobility(EComponentMobility::Movable);
-
+	
 	/*Retrieving ScaryGhostmesh*/
 	ScaredGhostMesh = GhostMesh->GetStaticMesh();
 }
@@ -139,23 +143,17 @@ void AGhostCharacter::Fire()
 #pragma endregion SkillA
 
 #pragma region SkillB
-//Player becomes invulnerable for few seconds
+//Player destroys all ghosts around it and becomes invulnerable for few seconds
 void AGhostCharacter::LightUp()
 {
 	if (AvailableDot >= SkillB && !IsInvulnerable)
 	{
 		AvailableDot -= SkillB;
 		OnCollected.Broadcast(0, AvailableDot);
-		GhostMesh->SetStaticMesh(NormalGhost);
-		ColorStart = GhostVisionArea->Temperature;
-		IntensityStart = GhostVisionArea->Intensity;
-		ColorEnd = 3500;
-		IntensityEnd = 10;
-		AttenuationRadiusStart = GhostVisionArea->AttenuationRadius;
-		AttenuationRadiusEnd = 300;
+		GhostMesh->SetStaticMesh(NormalGhost);		
 		GhostVisionArea->SetIntensity(IntensityEnd);
 		GhostVisionArea->SetAttenuationRadius(AttenuationRadiusEnd);
-		GhostVisionArea->SetTemperature(3500);
+		GhostVisionArea->SetTemperature(ColorEnd);
 		ElapsedTme = 0.f;
 		IsInvulnerable = true;
 		IsPressed = false;
@@ -221,7 +219,7 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 	if (!OtherActor) return;
 	if (OtherActor->IsA(ACollectable::StaticClass()))
 	{
-		if (Cast<APacDot>(OtherActor))
+		if (OtherActor->IsA(APacDot::StaticClass()))
 		{
 			AvailableDot++;
 			OnCollected.Broadcast(0, AvailableDot);
@@ -233,6 +231,7 @@ void AGhostCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		}
 		return;
 	}
+	//If I am not invulnerable I lose a life
 	if (OtherActor->IsA(APacGhostEnemy::StaticClass()))
 	{
 		if (!IsInvulnerable)

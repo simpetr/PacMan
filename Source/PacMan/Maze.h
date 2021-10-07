@@ -26,8 +26,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
 	void SpawnStaticMeshActor(const FVector& InLocation) const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category= "MazeSetup")
@@ -71,8 +70,8 @@ private:
 	int SpawnCounter;
 
 	UFUNCTION()
-	void ResetPosition(int Value);
-	void ResetPosition2();
+	void ResetNotification(int Value);
+	void ResetPosition();
 	UFUNCTION()
 	void ResetEnemyKilled(AActor* Enemy);
 	UFUNCTION()

@@ -6,7 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SoundManager.generated.h"
 
-
+class UAudioComponent;
+class USoundBase;
 UCLASS()
 class PACMAN_API ASoundManager : public AActor
 {
@@ -38,17 +39,13 @@ public:
 	int GhostLife=3;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
 	int ItemToCollect=4;
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
-	int Volume=0.8f;
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	//delegate bindings
 	UFUNCTION()
 	void SomethingEat(int TypeCollected, int Value);
 	UFUNCTION()

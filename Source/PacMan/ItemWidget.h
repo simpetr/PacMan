@@ -10,7 +10,6 @@
 /**
  * 
  */
-class USoundBase;
 UCLASS()
 class PACMAN_API UItemWidget : public UUserWidget
 {

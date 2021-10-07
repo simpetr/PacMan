@@ -11,26 +11,27 @@
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
 
-#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,10.f, FColor::Red,TEXT(text),false)
+//FOR DEBUG PURPOSES 
+/*#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,10.f, FColor::Red,TEXT(text),false)
 #define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,10.f, FColor::Green,TEXT(text),false)
-#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,10.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}
+#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,10.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}*/
 
-//TODO Improve AI add some randomness and reaction to light skill
+
 void APacGhostAIController::BeginPlay()
 {
 	Super::BeginPlay();
-	PRINT("Begin play");
 }
 
 
 void APacGhostAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	PRINT("POSSESED");
+	
 	ControlledPawn = Cast<APacGhostEnemy>(InPawn);
 	Player = Cast<AGhostCharacter>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (Player)
 	{
+		//Bind called when a player collect a special item
 		Player->OnCollected.AddDynamic(this, &APacGhostAIController::ReactToPlayerAction);
 	}
 	UWorld* World = GetWorld();
@@ -39,11 +40,12 @@ void APacGhostAIController::OnPossess(APawn* InPawn)
 		NavMesh = FNavigationSystem::GetCurrent<UNavigationSystemV1>(World);
 		if (NavMesh)
 		{
-			PRINT_COMPLEX("%s", *NavMesh->GetName());
+			//Add some Randomness to the duration of the Chasing and Scattering Phase
+			ChasingTime+= FMath::RandRange(-3,+3);
+			ScatteringTime += FMath::RandRange(-3,+3);
+			GetWorldTimerManager().SetTimer(TimerHandle, this, &APacGhostAIController::ScatterPhase, 2.f,false);
 		}
-		ChasingTime+= FMath::RandRange(-3,+3);
-		ScatteringTime += FMath::RandRange(-3,+2);
-		GetWorldTimerManager().SetTimer(TimerHandle, this, &APacGhostAIController::ScatterPhase, 0.1f, false, 2.f);
+		
 	}
 	
 }
@@ -53,36 +55,56 @@ void APacGhostAIController::OnMoveCompleted(FAIRequestID RequestID, const FPathF
 	Super::OnMoveCompleted(RequestID, Result);
 	if (Result.Code == (EPathFollowingResult::Aborted))
 	{
-		PRINT_ERROR("RICERCA FALLITA VADO GIRANDO!");
-		//Reaching actor failed
+		//if I am here I changed phase and my previous
+		//movement has been deleted (for example I could not reach the player)
+		//reset variable
 		if(IsChasing) IsChasing = false;
 		if(IsScattering) IsScattering = false;
+		return;
 	}
-	ScatterPhase();
+	//I reached the point..
+	if(Result.Code == (EPathFollowingResult::Success))
+	{
+		//..but I'm not in chasing mode
+		if( IsScattering && !IsChasing)
+		{
+			//if I'm close
+			const FVector ControlledLocation = ControlledPawn->GetActorLocation();
+			const FVector PlayerLocation = Player->GetActorLocation();
+			if(FVector::Distance(ControlledLocation,PlayerLocation)<= 700.f)
+			{
+				//switch immediately to chasing mode
+				ChasingPhase();
+			}else
+			{
+				//otherwise nomal scattering mode
+				ScatterPhase();
+			}
+		}
+	}
+	
 }
 
 void APacGhostAIController::ScatterPhase()
 {
-	PRINT("FASE DI SCATTER");
 	FNavLocation RandomLocation;
 	const FVector AILocation = ControlledPawn->GetActorLocation();
-	//FVector RandomLocation = NavMesh->GetRandomReachablePointInRadius(this,ControlledPawn->GetActorLocation(),1000.f );
 	if (NavMesh)
 	{
+		//Find and reach a point around me
 		if (NavMesh->GetRandomReachablePointInRadius(AILocation, 600.f, RandomLocation))
-			//DrawDebugSphere(GetWorld(), RandomLocation.Location, 20.f, 15, FColor::Red, false, 2);
 		{
 			MoveToLocation(RandomLocation.Location);
 		}
 	}
-
+	//Set the Timer after which i start the chasing phase
+	//If I haven't set it yet
 	if (!IsScattering)
 	{
-		//PRINT("SETTO CONTATORE");
 		IsScattering = true;
 		IsChasing = false;
-		GetWorldTimerManager().ClearTimer(ChasingHandle);
-		GetWorldTimerManager().SetTimer(ChasingHandle, this, &APacGhostAIController::ChasingPhase, ScatteringTime,
+		GetWorldTimerManager().ClearTimer(PhaseHandle);
+		GetWorldTimerManager().SetTimer(PhaseHandle, this, &APacGhostAIController::ChasingPhase, ScatteringTime,
 		                                false);
 		
 	}
@@ -90,23 +112,25 @@ void APacGhostAIController::ScatterPhase()
 
 void APacGhostAIController::ChasingPhase()
 {
-	PRINT("FASE DI CHASING");
+	//In the chasing phase the enemy will trye to reach the player
 	IsScattering = false;
 	IsChasing = true;
 	if (NavMesh)
 	{
 		MoveToActor(Player, 8.f, false);
 	}
-	//GetWorldTimerManager().ClearTimer(PhaseHandler);
-	GetWorldTimerManager().ClearTimer(ChasingHandle);
-	GetWorldTimerManager().SetTimer(ChasingHandle, this, &APacGhostAIController::ScatterPhase, ChasingTime, false);
+	//After a certain time i switch back to the scattering phase
+	GetWorldTimerManager().ClearTimer(PhaseHandle);
+	GetWorldTimerManager().SetTimer(PhaseHandle, this, &APacGhostAIController::ScatterPhase, ChasingTime, false);
 }
 
+//When the Player collect a Special Item the Chasing and Scattering time are updated
+//More Special Item are collected more time the Enemies will spend in Chasing time
 void APacGhostAIController::ReactToPlayerAction(int TypeCollected, int Value)
 {
 	if (TypeCollected == 1)
 	{
-		if(ScatteringTime !=1)
+		if(ScatteringTime !=2)
 		{
 			ScatteringTime -= 1;
 		}

@@ -15,6 +15,9 @@ void USkillsWidget::NativeConstruct()
 	CheckSkills(0);
 }
 
+//Update the counter of collected yellow dots
+//if they are enough to use a skill the opacity
+//of the image change
 void USkillsWidget::CheckSkills(int Value) const
 {
 	TextCounter->SetText(FText::FromString("Dots: "+FString::FromInt(Value)));

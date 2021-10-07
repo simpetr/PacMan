@@ -23,7 +23,9 @@ void ULifeWidget::NativeConstruct()
 		ButtonRestart->OnClicked.AddDynamic(this, &ULifeWidget::RestartLevel);
 	}
 }
-
+//Update the text when the player is eaten by a ghost
+// if the player has still life an animation is played.
+// if the player has no life new UI elements become visible
 bool ULifeWidget::CheckGameOver(int Value)
 {
 	TextLife->SetText(FText::FromString("Life: " + FString::FromInt(Value)));
@@ -48,9 +50,8 @@ bool ULifeWidget::CheckGameOver(int Value)
 	return false;
 }
 
-
+//called when the player click on the restart button
 void ULifeWidget::RestartLevel()
 {
-	//TODO Change restart point? 
 	UGameplayStatics::OpenLevel(this, *GetWorld()->GetName(), true);
 }
