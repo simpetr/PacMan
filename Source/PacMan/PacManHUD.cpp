@@ -3,7 +3,6 @@
 
 #include "PacManHUD.h"
 
-#include "PacDotWidget.h"
 #include "ItemWidget.h"
 #include "GhostCharacter.h"
 #include "LifeWidget.h"
@@ -25,14 +24,12 @@ void APacManHUD::BeginPlay()
 	//Create widgets
 	if(ItemWidget && SkillsWidget && LifeWidget)
 	{
-		Fade = CreateWidget<UUserWidget>(GetWorld(),StartFade);
 		Item = CreateWidget<UItemWidget>(GetWorld(),ItemWidget);
 		Skills = CreateWidget<USkillsWidget>(GetWorld(),SkillsWidget);
 		GameOver = CreateWidget<ULifeWidget>(GetWorld(),LifeWidget);
 		
-		if(Item && Skills && GameOver && Fade)
+		if(Item && Skills && GameOver )
 		{
-			Fade->AddToViewport();
 			Item->AddToViewport();
 			Skills->AddToViewport();
 			GameOver->AddToViewport();

@@ -12,7 +12,10 @@
 /**
  * 
  */
-
+class UTextBlock;
+class UButton;
+class UImage;
+class UWidgetAnimation;
 UCLASS()
 class PACMAN_API ULifeWidget : public UUserWidget
 {
@@ -36,18 +39,18 @@ public:
 
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextLife;
+	UTextBlock* TextLife;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
-	class UTextBlock* TextGameOver;
+	UTextBlock* TextGameOver;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta = (BindWidget))
-	class UButton* ButtonRestart;
+	UButton* ButtonRestart;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta = (BindWidget))
-	class UImage* BackGround;
+	UImage* BackGround;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Transient, meta = ( BindWidgetAnim ) )
-	class UWidgetAnimation* RestartFading;
+	UWidgetAnimation* RestartFading;
 	
 };

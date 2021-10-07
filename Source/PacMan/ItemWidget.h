@@ -10,6 +10,8 @@
 /**
  * 
  */
+class UTextBlock;
+class UWidgetAnimation;
 UCLASS()
 class PACMAN_API UItemWidget : public UUserWidget
 {
@@ -28,6 +30,9 @@ public:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, meta =(BindWidget))
     class UTextBlock* TextEscape;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Transient, meta = ( BindWidgetAnim ) )
+	UWidgetAnimation* StartFade;
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Settings")
 	int ItemsToCollect = 4;

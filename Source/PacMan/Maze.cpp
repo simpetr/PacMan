@@ -12,10 +12,10 @@
 #include "Engine/StaticMeshActor.h"
 #include "Teleport.h"
 #include "SoundManager.h"
-
-#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
+//DEBUG PURPOSES
+/*#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
 #define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
-#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}
+#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}*/
 // Sets default values
 AMaze::AMaze()
 {
@@ -37,8 +37,6 @@ void AMaze::BeginPlay()
 	{
 		for (int j = 0; j < YSize; j += Offset)
 		{
-			//ONLY DEBUG
-			//DrawDebugSphere(World,FVector(i,j,0)+MyLocation,5.f, 16, FColor::Red, true) ;
 			int IndexI = i / Offset;
 			int IndexJ = j / Offset;
 			int SeedDigit = LevelSeed[IndexI * ScaleFactor + IndexJ];
@@ -118,7 +116,7 @@ void AMaze::BeginPlay()
 				IsExitCreated = true;
 				FVector Location = FVector(i, j, 0) + MyLocation;
 
-				AMazeExit* Exit = GetWorld()->SpawnActor<AMazeExit>(MazeExit, Location, FRotator::ZeroRotator,
+				GetWorld()->SpawnActor<AMazeExit>(MazeExit, Location, FRotator::ZeroRotator,
 				                                                    SpawnParameters);
 			}
 		}
@@ -161,7 +159,7 @@ void AMaze::ResetNotification(int Value)
 	if (Value > 0)
 	{
 		Player->SetActorEnableCollision(false);
-		
+
 		for (int i = 0; i < Enemies.Num(); i++)
 		{
 			Enemies[i]->SetActorHiddenInGame(true);
@@ -182,8 +180,6 @@ void AMaze::ResetNotification(int Value)
 
 void AMaze::ResetPosition()
 {
-	
-	
 	Player->SetActorLocation(PlayerSpawn);
 	Player->SetActorEnableCollision(true);
 	for (int i = 0; i < Enemies.Num(); i++)
@@ -198,9 +194,12 @@ void AMaze::ResetEnemyKilled(AActor* Enemy)
 {
 	if (Enemy)
 	{
-		APacGhostEnemy* X = Cast<APacGhostEnemy>(Enemy);
-		int Index = Enemies.Find(X);
-		X->SetActorLocation(EnemiesSpawn[Index]);
+		APacGhostEnemy* PacGhostEnemy = Cast<APacGhostEnemy>(Enemy);
+		if (PacGhostEnemy)
+		{
+			int Index = Enemies.Find(PacGhostEnemy);
+			PacGhostEnemy->SetActorLocation(EnemiesSpawn[Index]);
+		}
 	}
 }
 
@@ -218,7 +217,6 @@ void AMaze::SpawnPacManGhost()
 		PacGhost, EnemiesSpawn[SpawnCounter - 1], FRotator::ZeroRotator, SpawnParameters);
 	if (PacGhostEnemy)
 	{
-		PRINT_ERROR("GHOST SPAWNED");
 		PacGhostEnemy->OnPacManKilled.AddDynamic(this, &AMaze::ResetEnemyKilled);
 		PacGhostEnemy->OnPacManKilled.AddDynamic(this->Audio, &ASoundManager::PacManGhostEat);
 		Enemies.Add(PacGhostEnemy);

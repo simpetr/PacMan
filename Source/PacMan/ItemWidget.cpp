@@ -13,6 +13,7 @@ void UItemWidget::NativeConstruct()
 	Super::NativeConstruct();
 	UpdateCount(0);
 	TextEscape->SetVisibility(ESlateVisibility::Hidden);
+	PlayAnimation(StartFade);
 }
 //Update Text when an Item is collected. When all special items are collected
 //an extra message appears

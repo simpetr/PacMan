@@ -7,7 +7,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
-#include "DrawDebugHelpers.h"
 #include "Collectable.h"
 #include "PacDot.h"
 #include "GlowingDot.h"
@@ -15,9 +14,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
+/*#define PRINT_ERROR(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Red,TEXT(text),false)
 #define PRINT(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,TEXT(text),false)
-#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}
+#define PRINT_COMPLEX(x,...) if (GEngine) {GEngine->AddOnScreenDebugMessage(-1,2.f, FColor::Green,FString::Printf(TEXT(x), __VA_ARGS__));}*/
 
 // Sets default values
 AGhostCharacter::AGhostCharacter()
@@ -128,9 +127,6 @@ void AGhostCharacter::Fire()
 		OnCollected.Broadcast(0, AvailableDot);
 		const FVector Loc = GetActorForwardVector();
 		const FVector LocStart = GetActorLocation();
-		//Debug Purposes
-		/*DrawDebugSphere(GetWorld(),LocStart,5,8,FColor::Red,false,3,0,1);
-		DrawDebugLine(GetWorld(),LocStart,LocStart+(Loc*100.f),FColor::Red,false,3,0,1);*/
 		if (GlowingDot)
 		{
 			FActorSpawnParameters SpawnParameters;

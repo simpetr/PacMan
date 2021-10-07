@@ -29,10 +29,6 @@ public:
 	TSubclassOf<USkillsWidget> SkillsWidget;
 	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
 	TSubclassOf<ULifeWidget> LifeWidget;
-
-	//Full blueprint only for starting fade
-	UPROPERTY(EditDefaultsOnly,Category = "Widgets")
-	TSubclassOf<UUserWidget> StartFade;
 	
 	
 	UFUNCTION()
@@ -49,7 +45,5 @@ private:
 	UPROPERTY()
 	ULifeWidget* GameOver;
 
-	UPROPERTY()
-	UUserWidget* Fade;
 	
 };

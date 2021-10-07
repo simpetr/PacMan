@@ -2,6 +2,7 @@
 
 
 #include "Collectable.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 ACollectable::ACollectable()
@@ -11,7 +12,7 @@ ACollectable::ACollectable()
 	Root = CreateDefaultSubobject<USceneComponent>("Root");
 	RootComponent = Root;
 	
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Dot");
 	Mesh->SetupAttachment(Root);
 
 	OnActorBeginOverlap.AddDynamic(this,&ACollectable::OnOverlap);
