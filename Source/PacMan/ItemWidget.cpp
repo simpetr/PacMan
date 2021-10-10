@@ -25,6 +25,6 @@ void UItemWidget::UpdateCount(int Value) const
 	if (Value == ItemsToCollect)
 	{
 		TextEscape->SetVisibility(ESlateVisibility::Visible);
-		TextEscape->SetText(FText::FromString("All keys collected!\n\nEscape from the Maze!"));
+		TextEscape->SetText(FText::FromString("All keys collected!\n\nEscape from the Maze\nReach the center!"));
 	}
 }
