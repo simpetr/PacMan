@@ -1,4 +1,4 @@
-# PacMan
+# PacMan - A Ghost Story
 
 
 *A ghost has a bad dream due to an indigestion of "Pac-Men". Find the four Galaxian Flagship and escape from the nightmare.*
