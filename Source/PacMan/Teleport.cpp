@@ -14,7 +14,7 @@ ATeleport::ATeleport()
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>("Collider");
 	RootComponent = BoxCollider;
 
-	OnActorBeginOverlap.AddDynamic(this,&ATeleport::OnOverlap);
+	
 	
 
 }
@@ -36,6 +36,6 @@ void ATeleport::OnOverlap(AActor* OverlappedActor, AActor* OtherActor)
 void ATeleport::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	OnActorBeginOverlap.AddDynamic(this,&ATeleport::OnOverlap);
 }
 

@@ -15,15 +15,14 @@ ACollectable::ACollectable()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Dot");
 	Mesh->SetupAttachment(Root);
 
-	OnActorBeginOverlap.AddDynamic(this,&ACollectable::OnOverlap);
-
+	
 }
 
 // Called when the game starts or when spawned
 void ACollectable::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	OnActorBeginOverlap.AddDynamic(this,&ACollectable::OnOverlap);
 }
 
 // Called every frame

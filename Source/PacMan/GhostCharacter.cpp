@@ -41,7 +41,7 @@ AGhostCharacter::AGhostCharacter()
 
 	BaseTurnRate = 45.f;
 
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGhostCharacter::OnOverlapBegin);
+	
 }
 
 
@@ -49,7 +49,7 @@ AGhostCharacter::AGhostCharacter()
 void AGhostCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AGhostCharacter::OnOverlapBegin);
 	/*Setting up light parameters*/
 	GhostVisionArea->SetIntensityUnits(ELightUnits::Candelas);
 	GhostVisionArea->SetIntensity(IntensityStart);

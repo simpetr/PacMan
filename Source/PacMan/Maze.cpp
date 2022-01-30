@@ -142,6 +142,7 @@ void AMaze::BeginPlay()
 
 
 //Spawn Wall
+//---
 void AMaze::SpawnStaticMeshActor(const FVector& InLocation) const
 {
 	AStaticMeshActor* MyNewActor = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass());

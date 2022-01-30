@@ -13,7 +13,7 @@ APacGhostEnemy::APacGhostEnemy()
 	PacGhostMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PacGhostmesh"));
 	PacGhostMesh->SetupAttachment(RootComponent);
 
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this,&APacGhostEnemy::OnOverlapBegin);
+	
 
 }
 
@@ -21,6 +21,7 @@ APacGhostEnemy::APacGhostEnemy()
 void APacGhostEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this,&APacGhostEnemy::OnOverlapBegin);
 	
 }
 

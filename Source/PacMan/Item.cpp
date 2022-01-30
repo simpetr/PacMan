@@ -8,6 +8,7 @@
 
 AItem::AItem()
 {
+	
 	PrimaryActorTick.bCanEverTick = true;
 }
 

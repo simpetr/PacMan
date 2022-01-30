@@ -20,7 +20,7 @@ AGlowingDot::AGlowingDot()
 	LightArea->SetupAttachment(RootComponent);
 	
 
-	OnActorBeginOverlap.AddDynamic(this,&AGlowingDot::OnOverlap);
+	
 
 }
 
@@ -29,6 +29,7 @@ AGlowingDot::AGlowingDot()
 void AGlowingDot::BeginPlay()
 {
 	Super::BeginPlay();
+	OnActorBeginOverlap.AddDynamic(this,&AGlowingDot::OnOverlap);
 	LightArea->SetIntensityUnits(ELightUnits::Candelas);
 	LightArea->SetIntensity(2.5f);
 	LightArea->SetAttenuationRadius(200.f);
