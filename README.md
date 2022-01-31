@@ -3,7 +3,7 @@
 
 *A ghost has a bad dream due to an indigestion of "Pac-Man". Find the four Galaxian Flagship and escape from the nightmare.*
 
-Made in Unreal Engine 4 [C++ and Blueprints (only for the starting menu)]
+A short game Made in Unreal Engine 4 [C++ and Blueprints (only for the starting menu)]
 
 All 3D models were created with AssetForge.
 
@@ -14,7 +14,7 @@ Free to use sounds downloaded from sound-resource, free-stock-music.com and free
 The maze and all its elements can be customized changing the parameters exposed  in the blueprint "BP_Maze":
 ![Maze settings](https://i.imgur.com/QMa2kb0.png)
 
-The level seed is a string of numbers representing the maze structure:
+Level seed is a string of numbers representing the maze structure:
 
  0. Pac dot
  1. Wall
@@ -24,7 +24,6 @@ The level seed is a string of numbers representing the maze structure:
  5. Player
  6. PacMan enemy
  7. Maze exit
-
 
 
 ## Controls
