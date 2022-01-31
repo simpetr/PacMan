@@ -9,13 +9,19 @@ All 3D models were created with AssetForge.
 
 Free to use sounds downloaded from sound-resource, free-stock-music.com and freesound.com (JungleBean)
 
+[Screenshots](#Screenshots)
+[Settings](#Settings)
+[Controls](#Controls)
+
+
 ## Screenshots
 
 ![StartingMenu](https://i.imgur.com/b5LZSbUl.png)
 ![Maze1](https://i.imgur.com/qJZH8N2l.png)
 ![Maze2](https://i.imgur.com/lPGRR0bl.png)
+![Maze3](https://i.imgur.com/YS8CZbWl.png)
 
-## Extra
+## Settings
 The maze and all its elements can be customized changing the parameters exposed  in the blueprint "BP_Maze":
 ![Maze settings](https://i.imgur.com/QMa2kb0.png)
 
