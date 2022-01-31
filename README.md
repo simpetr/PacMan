@@ -12,7 +12,7 @@ Free to use sounds downloaded from sound-resource, free-stock-music.com and free
 
 ## Extra
 The maze and all its elements can be customized changing the parameters exposed  in the blueprint "BP_Maze":
-[Imgur](https://i.imgur.com/QMa2kb0.png)
+![Maze settings](https://i.imgur.com/QMa2kb0.png)
 
 The level seed is a string of numbers representing the maze structure:
 
