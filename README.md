@@ -25,6 +25,10 @@ Level seed is a string of numbers representing the maze structure:
  6. PacMan enemy
  7. Maze exit
 
+### Possible update
+
+Implement an in-game editor for the maze creation
+
 
 ## Controls
 
