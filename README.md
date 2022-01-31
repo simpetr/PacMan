@@ -9,9 +9,12 @@ All 3D models were created with AssetForge.
 
 Free to use sounds downloaded from sound-resource, free-stock-music.com and freesound.com (JungleBean)
 
-[Screenshots](#Screenshots)
-[Settings](#Settings)
-[Controls](#Controls)
+Anchors:
+-[Screenshots](#Screenshots)
+
+-[Settings](#Settings)
+
+-[Controls](#Controls)
 
 
 ## Screenshots
