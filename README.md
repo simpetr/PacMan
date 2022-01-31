@@ -11,7 +11,7 @@ Free to use sounds downloaded from sound-resource, free-stock-music.com and free
 
 ## Screenshots
 
-![1](https://i.imgur.com/b5LZSbUl.png)
+![1](https://i.imgur.com/b5LZSbUm.png)
 
 ## Extra
 The maze and all its elements can be customized changing the parameters exposed  in the blueprint "BP_Maze":
